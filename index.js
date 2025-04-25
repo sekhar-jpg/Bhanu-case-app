@@ -1,49 +1,40 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
+const express = require("express");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 
-// Setup
 const app = express();
-const port = process.env.PORT || 3000;
+const port = 10000;
 
-// Middleware
 app.use(bodyParser.json());
 
-// Connect to MongoDB
-mongoose.set('strictQuery', false);
-mongoose.connect('mongodb+srv://bhanuhomeopath:sekhar123@cluster0.wm2pxqs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
-.then(() => console.log('✅ MongoDB connected successfully'))
-.catch(err => console.error('❌ MongoDB connection error:', err));
+// ✅ MongoDB connection
+mongoose.connect(
+  'mongodb+srv://Bhanuhomeopathy:sekhar123@cluster0.wm2pxqs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
+  { useNewUrlParser: true, useUnifiedTopology: true }
+)
+.then(() => console.log("✅ MongoDB connected successfully"))
+.catch((err) => console.log("❌ MongoDB connection error:", err));
 
-// Define Case schema
+// ✅ Sample schema
 const caseSchema = new mongoose.Schema({
-    name: String,
-    phone: String,
-    date: { type: Date, default: Date.now },
-    symptoms: String
+  name: String,
+  phone: String,
+  date: Date,
 });
 
-const Case = mongoose.model('Case', caseSchema);
+const Case = mongoose.model("Case", caseSchema);
 
-// Routes
-app.get('/', (req, res) => {
-    res.send('🎉 Bhanu Homeopathy Reminder App Running');
+// ✅ POST endpoint
+app.post("/submit-case", async (req, res) => {
+  try {
+    const newCase = new Case(req.body);
+    await newCase.save();
+    res.status(201).json({ message: "Case submitted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to submit case", error });
+  }
 });
 
-app.post('/submit-case', async (req, res) => {
-    try {
-        const newCase = new Case(req.body);
-        await newCase.save();
-        res.status(200).json({ message: 'Case saved successfully' });
-    } catch (error) {
-        res.status(500).json({ message: 'Error saving case', error });
-    }
-});
-
-// Start server
 app.listen(port, () => {
-    console.log(`🚀 Server running on http://localhost:${port}`);
+  console.log(`🚀 Server running on http://localhost:${port}`);
 });
