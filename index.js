@@ -1,67 +1,44 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+
 const app = express();
-const port = 10000;
+const PORT = 10000;
 
 app.use(bodyParser.json());
 
-// ✅ MongoDB Connection
-mongoose.connect("mongodb+srv://bhanuhomeopathy:sekhar123@cluster0.wm2pxqs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => {
-  console.log("✅ MongoDB connected successfully");
-})
-.catch((err) => {
-  console.error("❌ MongoDB connection error:", err);
-});
+// ✅ Connect to MongoDB Atlas
+mongoose
+  .connect("mongodb+srv://Bhanuhomeopathy:sekhar123@cluster0.wm2pxqs.mongodb.net/BhanuDB?retryWrites=true&w=majority&appName=Cluster0", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("✅ MongoDB connected successfully"))
+  .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-// ✅ Mongoose Schema
+// ✅ Define schema
 const caseSchema = new mongoose.Schema({
   name: String,
   phone: String,
   date: Date,
-  followUpDate: Date // follow-up date
+  followUpDate: Date,
 });
 
 const Case = mongoose.model("Case", caseSchema);
 
-// ✅ POST case submission
+// ✅ POST endpoint to submit case
 app.post("/submit-case", async (req, res) => {
+  const { name, phone, date, followUpDate } = req.body;
   try {
-    const newCase = new Case(req.body);
+    const newCase = new Case({ name, phone, date, followUpDate });
     await newCase.save();
-    res.status(200).json({ message: "Case submitted successfully" });
+    res.status(201).json({ message: "Case submitted successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Error submitting case", error });
+    res.status(500).json({ error: "Error submitting case" });
   }
 });
 
-// ✅ GET follow-ups due today
-app.get("/due-today", async (req, res) => {
-  try {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const tomorrow = new Date();
-    tomorrow.setHours(23, 59, 59, 999);
-
-    const duePatients = await Case.find({
-      followUpDate: {
-        $gte: today,
-        $lte: tomorrow
-      }
-    });
-
-    res.json(duePatients);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching due patients", error });
-  }
-});
-
-// ✅ Start Server
-app.listen(port, () => {
-  console.log(`🚀 Server running on http://localhost:${port}`);
+// ✅ Server start
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
