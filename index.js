@@ -10,6 +10,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI, {
@@ -18,11 +19,6 @@ mongoose.connect(process.env.MONGO_URI, {
 })
 .then(() => console.log("MongoDB connected"))
 .catch(err => console.log("MongoDB connection error: ", err));
-
-// Home route
-app.get('/', (req, res) => {
-  res.send('Bhanu Reminder App is running!');
-});
 
 // Case submission route (POST)
 app.post('/submit-case', async (req, res) => {
@@ -47,27 +43,28 @@ app.get('/cases', async (req, res) => {
   }
 });
 
-// Today's Follow-up Patients Route (GET)
-app.get('/due-today', async (req, res) => {
-  try {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Start of today
+// Home route
+app.get('/', (req, res) => {
+  res.send('Bhanu Reminder App is running!');
+});
 
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1); // Start of tomorrow
-
-    const dueCases = await Case.find({
-      followUpDate: {
-        $gte: today,
-        $lt: tomorrow
-      }
-    });
-
-    res.status(200).json(dueCases);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error fetching due cases' });
-  }
+// Add New Case Form Route
+app.get('/add-case', (req, res) => {
+  res.send(`
+    <h1>Add New Case</h1>
+    <form method="POST" action="/submit-case">
+      <label>Name:</label><br/>
+      <input type="text" name="name" required /><br/><br/>
+      
+      <label>Phone:</label><br/>
+      <input type="text" name="phone" required /><br/><br/>
+      
+      <label>Follow-Up Date:</label><br/>
+      <input type="date" name="followUpDate" required /><br/><br/>
+      
+      <button type="submit">Submit Case</button>
+    </form>
+  `);
 });
 
 app.listen(port, () => {
