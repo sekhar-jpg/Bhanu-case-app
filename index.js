@@ -12,7 +12,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // MongoDB connection (with updated db name: Bhanuhomeopathy)
-mongoose.connect('mongodb+srv://bhanuhomeopathy:sekhar123@cluster0.wm2pxqs.mongodb.net/Bhanuhomeopathy?retryWrites=true&w=majority&appName=Cluster0', {
+mongoose.connect('mongodb+srv://Bhanuhomeopathy:bhanu123@cluster0.wm2pxqs.mongodb.net/Bhanuhomeopathy?retryWrites=true&w=majority&appName=Cluster0', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
