@@ -1,14 +1,54 @@
 const mongoose = require('mongoose');
 
-// Define the schema for cases
 const caseSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  phone: { type: String, required: true },
-  date: { type: Date, required: true },
-  followUpDate: { type: Date, required: true },
+  age: Number,
+  gender: String,
+  maritalStatus: String,
+  occupation: String,
+  address: String,
+  phone: String,
+  dateOfVisit: String,
+  complaints: [
+    {
+      complaint: String,
+      duration: String,
+      description: String
+    }
+  ],
+  historyOfPresentIllness: String,
+  pastHistory: {
+    childhoodDiseases: String,
+    surgeriesInjuries: String,
+    majorIllnesses: String
+  },
+  familyHistory: String,
+  personalHistory: {
+    appetite: String,
+    cravingsAversions: String,
+    thirst: String,
+    bowelMovement: String,
+    urine: String,
+    sleep: String,
+    dreams: String,
+    sweat: String,
+    thermalNature: String,
+    habits: String,
+    menstrualHistory: String
+  },
+  mentalSymptoms: String,
+  generalRemarks: String,
+  doctorObservations: String,
+  prescription: [
+    {
+      date: String,
+      remedyName: String,
+      potency: String,
+      dose: String,
+      instructions: String
+    }
+  ],
+  followUpDate: String
 });
 
-// Create the model based on the schema
-const Case = mongoose.model('Case', caseSchema);
-
-module.exports = Case;
+module.exports = mongoose.model('Case', caseSchema);
