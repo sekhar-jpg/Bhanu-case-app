@@ -1,29 +1,38 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const Case = require('./models/Case'); // Correct import path for Case model
+const bodyParser = require('body-parser');
 
+// Initialize Express
 const app = express();
-const port = process.env.PORT || 10000;
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => {
-    console.log('MongoDB connected');
-  })
-  .catch((err) => {
-    console.error('MongoDB connection error:', err);
-  });
+// Middleware to parse JSON bodies
+app.use(bodyParser.json());
 
-// Middleware to parse incoming requests
-app.use(express.json());
+// MongoDB connection
+mongoose.connect('mongodb+srv://bhanuhomeopathy:sekhar123456@cluster0.wm2pxqs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log('MongoDB connected'))
+.catch((err) => console.log('MongoDB connection error:', err));
 
-// Example endpoint to create a case
+// Case schema and model
+const caseSchema = new mongoose.Schema({
+  patientName: { type: String, required: true },
+  symptoms: { type: String, required: true },
+  date: { type: Date, required: true },
+});
+
+const Case = mongoose.model('Case', caseSchema);
+
+// Root route
+app.get('/', (req, res) => {
+  res.send('Welcome to the Case Submission App');
+});
+
+// Submit case route
 app.post('/submit-case', (req, res) => {
   const { patientName, symptoms, date } = req.body;
-
-  if (!date) {
-    return res.status(400).json({ error: 'Date is required.' });
-  }
 
   const newCase = new Case({
     patientName,
@@ -31,16 +40,18 @@ app.post('/submit-case', (req, res) => {
     date,
   });
 
-  newCase.save()
+  newCase
+    .save()
     .then((savedCase) => {
-      res.status(201).json(savedCase);
+      res.status(200).send('Case submitted successfully');
     })
     .catch((err) => {
-      res.status(500).json({ error: 'Error saving case.', details: err });
+      console.error('Error saving case:', err);
+      res.status(500).send('Error saving case');
     });
 });
 
 // Start the server
-app.listen(port, () => {
-  console.log(`Server started on port ${port}`);
+app.listen(10000, () => {
+  console.log('Server is running on port 10000');
 });
