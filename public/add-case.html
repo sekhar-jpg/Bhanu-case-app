@@ -20,7 +20,7 @@
 
     <script>
         document.getElementById('caseForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+            e.preventDefault(); // form normal submit kakunda stop cheyyadam
             const name = document.getElementById('name').value;
             const phone = document.getElementById('phone').value;
 
@@ -33,8 +33,8 @@
                     body: JSON.stringify({ name, phone })
                 });
 
-                const text = await response.text();
-                document.getElementById('response').innerText = text;
+                const data = await response.text();
+                document.getElementById('response').innerText = data;
             } catch (error) {
                 document.getElementById('response').innerText = 'Error: ' + error;
             }
