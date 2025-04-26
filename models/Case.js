@@ -1,20 +1,18 @@
 const mongoose = require('mongoose');
 
 const caseSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  age: { type: Number, required: true },
-  gender: { type: String, required: true },
+  name: { type: String },
+  age: { type: Number },
+  gender: { type: String },
+  phone: { type: String },
   maritalStatus: { type: String },
   occupation: { type: String },
   address: { type: String },
-  phone: { type: String, required: true },
   dateOfVisit: { type: Date },
-
-  chiefComplaints: { type: String }, // (Problem + Duration + Details)
-  historyOfPresentIllness: { type: String },
+  chiefComplaints: { type: Array },
+  historyPresentIllness: { type: String },
   pastHistory: { type: String },
   familyHistory: { type: String },
-
   appetite: { type: String },
   cravingsAversions: { type: String },
   thirst: { type: String },
@@ -23,18 +21,15 @@ const caseSchema = new mongoose.Schema({
   sleep: { type: String },
   dreams: { type: String },
   sweat: { type: String },
-  thermalNature: { type: String },
+  thermal: { type: String },
   habits: { type: String },
   menstrualHistory: { type: String },
-
   mentalSymptoms: { type: String },
   generalRemarks: { type: String },
   doctorObservations: { type: String },
-
   prescription: { type: String },
-  followUpDate: { type: Date, required: true },
+  date: { type: Date, default: Date.now }, // 👉 default current date
+  followUpDate: { type: Date },             // 👉 optional
 });
 
-const Case = mongoose.model('Case', caseSchema);
-
-module.exports = Case;
+module.exports = mongoose.model('Case', caseSchema);
