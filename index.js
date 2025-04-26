@@ -1,44 +1,71 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const app = express();
-const PORT = 10000;
+const PORT = process.env.PORT || 10000;
 
+// Middleware
+app.use(cors());
 app.use(bodyParser.json());
 
-// ✅ Connect to MongoDB Atlas
-mongoose
-  .connect("mongodb+srv://Bhanuhomeopathy:sekhar123@cluster0.wm2pxqs.mongodb.net/BhanuDB?retryWrites=true&w=majority&appName=Cluster0", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("✅ MongoDB connected successfully"))
-  .catch((err) => console.error("❌ MongoDB connection error:", err));
+// MongoDB connection (with updated db name: Bhanuhomeopathy)
+mongoose.connect('mongodb+srv://bhanuhomeopathy:sekhar123@cluster0.wm2pxqs.mongodb.net/Bhanuhomeopathy?retryWrites=true&w=majority&appName=Cluster0', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 
-// ✅ Define schema
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, '❌ MongoDB connection error:'));
+db.once('open', () => {
+  console.log('✅ MongoDB connected successfully');
+});
+
+// Mongoose Schema & Model
 const caseSchema = new mongoose.Schema({
   name: String,
   phone: String,
   date: Date,
-  followUpDate: Date,
+  followUpDate: Date
 });
 
-const Case = mongoose.model("Case", caseSchema);
+const Case = mongoose.model('Case', caseSchema);
 
-// ✅ POST endpoint to submit case
-app.post("/submit-case", async (req, res) => {
-  const { name, phone, date, followUpDate } = req.body;
+// Routes
+
+// 1. Submit case
+app.post('/submit-case', async (req, res) => {
   try {
+    const { name, phone, date, followUpDate } = req.body;
     const newCase = new Case({ name, phone, date, followUpDate });
     await newCase.save();
-    res.status(201).json({ message: "Case submitted successfully" });
+    res.status(201).json({ message: 'Case submitted successfully' });
   } catch (error) {
-    res.status(500).json({ error: "Error submitting case" });
+    console.error('Error saving case:', error);
+    res.status(500).json({ message: 'Failed to submit case' });
   }
 });
 
-// ✅ Server start
+// 2. Get today's follow-ups
+app.get('/follow-ups-today', async (req, res) => {
+  try {
+    const today = new Date().toISOString().slice(0, 10); // yyyy-mm-dd
+    const results = await Case.find({
+      followUpDate: {
+        $gte: new Date(today + 'T00:00:00Z'),
+        $lte: new Date(today + 'T23:59:59Z')
+      }
+    });
+
+    res.status(200).json(results);
+  } catch (error) {
+    console.error('Error fetching follow-ups:', error);
+    res.status(500).json({ message: 'Failed to fetch follow-ups' });
+  }
+});
+
+// Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
