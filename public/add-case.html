@@ -2,120 +2,109 @@
 <html>
 <head>
   <title>Add New Case</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    h2 { color: #333; }
-    label { font-weight: bold; }
-    input, textarea, select { width: 100%; padding: 8px; margin-top: 5px; margin-bottom: 15px; }
-    button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
-    button:hover { background-color: #45a049; }
-  </style>
 </head>
 <body>
   <h1>Add New Case</h1>
   <form action="https://bhanu-case-app.onrender.com/submit-case" method="POST">
-    
+    <!-- Basic Patient Information -->
     <h2>1. Basic Patient Information</h2>
-    <label>Name:</label>
-    <input type="text" name="name" required>
+    <label>Name:</label><br>
+    <input type="text" name="name" required><br><br>
 
-    <label>Age / Gender:</label>
-    <input type="text" name="ageGender">
+    <label>Age:</label><br>
+    <input type="number" name="age" required><br><br>
 
-    <label>Marital Status:</label>
-    <input type="text" name="maritalStatus">
+    <label>Gender:</label><br>
+    <select name="gender" required>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+    </select><br><br>
 
-    <label>Occupation:</label>
-    <input type="text" name="occupation">
+    <label>Marital Status:</label><br>
+    <input type="text" name="maritalStatus"><br><br>
 
-    <label>Address:</label>
-    <textarea name="address"></textarea>
+    <label>Occupation:</label><br>
+    <input type="text" name="occupation"><br><br>
 
-    <label>Phone / WhatsApp:</label>
-    <input type="text" name="phone">
+    <label>Address:</label><br>
+    <textarea name="address"></textarea><br><br>
 
-    <label>Date of Visit:</label>
-    <input type="date" name="dateOfVisit">
+    <label>Phone / WhatsApp:</label><br>
+    <input type="text" name="phone" required><br><br>
 
+    <label>Date of Visit:</label><br>
+    <input type="date" name="dateOfVisit"><br><br>
+
+    <!-- Chief Complaints -->
     <h2>2. Chief Complaints</h2>
-    <textarea name="chiefComplaints" placeholder="Complaint - Duration - Description"></textarea>
+    <textarea name="chiefComplaints"></textarea><br><br>
 
+    <!-- History of Present Illness -->
     <h2>3. History of Present Illness</h2>
-    <textarea name="historyOfPresentIllness"></textarea>
+    <textarea name="historyOfPresentIllness"></textarea><br><br>
 
+    <!-- Past History -->
     <h2>4. Past History</h2>
-    <label>Childhood diseases:</label>
-    <textarea name="childhoodDiseases"></textarea>
+    <textarea name="pastHistory"></textarea><br><br>
 
-    <label>Surgeries / Injuries:</label>
-    <textarea name="surgeriesInjuries"></textarea>
-
-    <label>Major illnesses:</label>
-    <textarea name="majorIllnesses"></textarea>
-
+    <!-- Family History -->
     <h2>5. Family History</h2>
-    <textarea name="familyHistory" placeholder="Diabetes / Hypertension / Cancer / etc."></textarea>
+    <textarea name="familyHistory"></textarea><br><br>
 
+    <!-- Personal History -->
     <h2>6. Personal History</h2>
-    <label>Appetite:</label>
-    <textarea name="appetite"></textarea>
+    <label>Appetite:</label><br>
+    <input type="text" name="appetite"><br><br>
 
-    <label>Cravings / Aversions:</label>
-    <textarea name="cravingsAversions"></textarea>
+    <label>Cravings / Aversions:</label><br>
+    <input type="text" name="cravingsAversions"><br><br>
 
-    <label>Thirst:</label>
-    <textarea name="thirst"></textarea>
+    <label>Thirst:</label><br>
+    <input type="text" name="thirst"><br><br>
 
-    <label>Bowel Movement:</label>
-    <textarea name="bowelMovement"></textarea>
+    <label>Bowel Movement:</label><br>
+    <input type="text" name="bowelMovement"><br><br>
 
-    <label>Urine:</label>
-    <textarea name="urine"></textarea>
+    <label>Urine:</label><br>
+    <input type="text" name="urine"><br><br>
 
-    <label>Sleep:</label>
-    <textarea name="sleep"></textarea>
+    <label>Sleep:</label><br>
+    <input type="text" name="sleep"><br><br>
 
-    <label>Dreams:</label>
-    <textarea name="dreams"></textarea>
+    <label>Dreams:</label><br>
+    <input type="text" name="dreams"><br><br>
 
-    <label>Sweat:</label>
-    <textarea name="sweat"></textarea>
+    <label>Sweat:</label><br>
+    <input type="text" name="sweat"><br><br>
 
-    <label>Thermal Nature (Hot/Cold):</label>
-    <textarea name="thermalNature"></textarea>
+    <label>Thermal Nature (Hot/Cold):</label><br>
+    <input type="text" name="thermalNature"><br><br>
 
-    <label>Habits (Tea, Coffee, Smoking, Alcohol, etc.):</label>
-    <textarea name="habits"></textarea>
+    <label>Habits (Tea, Coffee, Smoking, Alcohol, etc.):</label><br>
+    <input type="text" name="habits"><br><br>
 
-    <label>Menstrual History (if applicable):</label>
-    <textarea name="menstrualHistory"></textarea>
+    <label>Menstrual History (if applicable):</label><br>
+    <input type="text" name="menstrualHistory"><br><br>
 
+    <!-- Mental Symptoms -->
     <h2>7. Mental Symptoms</h2>
-    <textarea name="mentalSymptoms" placeholder="Fear, Anxiety, Sadness, Anger, etc."></textarea>
+    <textarea name="mentalSymptoms"></textarea><br><br>
 
+    <!-- General Remarks -->
     <h2>8. General Remarks</h2>
-    <textarea name="generalRemarks"></textarea>
+    <textarea name="generalRemarks"></textarea><br><br>
 
+    <!-- Observations by Doctor -->
     <h2>9. Observations by Doctor</h2>
-    <textarea name="observationsByDoctor"></textarea>
+    <textarea name="doctorObservations"></textarea><br><br>
 
+    <!-- Prescription -->
     <h2>Prescription</h2>
-    <label>Date:</label>
-    <input type="date" name="prescriptionDate">
+    <textarea name="prescription"></textarea><br><br>
 
-    <label>Remedy Name:</label>
-    <input type="text" name="remedyName">
+    <label>Follow-Up Date:</label><br>
+    <input type="date" name="followUpDate" required><br><br>
 
-    <label>Potency:</label>
-    <input type="text" name="potency">
-
-    <label>Dose:</label>
-    <input type="text" name="dose">
-
-    <label>Instructions:</label>
-    <textarea name="instructions"></textarea>
-
-    <br><br>
     <button type="submit">Submit Case</button>
   </form>
 </body>
