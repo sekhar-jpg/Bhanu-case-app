@@ -31,6 +31,17 @@ app.post('/submit-case', async (req, res) => {
   }
 });
 
+// Case list route
+app.get('/cases', async (req, res) => {
+  try {
+    const cases = await Case.find();
+    res.status(200).json(cases);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error fetching cases' });
+  }
+});
+
 // Home route
 app.get('/', (req, res) => {
   res.send('Bhanu Reminder App is running!');
@@ -39,3 +50,4 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
 });
+
