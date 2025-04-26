@@ -1,34 +1,41 @@
-// index.js
-
 const express = require('express');
 const mongoose = require('mongoose');
-const Case = require('./models/Case');  // Make sure this path is correct
+const bodyParser = require('body-parser');
 
 const app = express();
-const port = 10000;
+app.use(bodyParser.json());
 
-// MongoDB connection
-mongoose.connect('mongodb+srv://bhanuhomeopathy:sekhar123456@cluster0.wm2pxqs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+// Connect to MongoDB (ensure your MongoDB URI is correct)
+mongoose.connect('your_mongodb_uri_here', { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.log(err));
+
+// Define Case schema and model
+const caseSchema = new mongoose.Schema({
+  name: String,
+  age: Number,
+  complaints: String,
+  remedy: String,
+  caseDate: Date
+});
+const Case = mongoose.model('Case', caseSchema);
+
+// Define the /submit-case POST route
+app.post('/submit-case', (req, res) => {
+  const newCase = new Case({
+    name: req.body.name,
+    age: req.body.age,
+    complaints: req.body.complaints,
+    remedy: req.body.remedy,
+    caseDate: req.body.caseDate
+  });
+
+  newCase.save()
+    .then(() => res.status(201).send('Case submitted successfully'))
+    .catch(err => res.status(400).send('Error submitting case: ' + err));
 });
 
-app.use(express.json());
-
-// Test route to check if Case model is working
-app.get('/test-case', async (req, res) => {
-  try {
-    const caseData = await Case.find();  // Fetch all cases from the database
-    if (!caseData.length) {
-      return res.status(404).json({ message: 'No cases found' });
-    }
-    res.json(caseData);  // Send the cases as JSON
-  } catch (error) {
-    console.error('Error fetching cases:', error);  // Log error for debugging
-    res.status(500).json({ message: 'Server error occurred' });  // Send error response
-  }
-});
-
-app.listen(port, () => {
-  console.log(`Server started on port ${port}`);
+// Start the server
+app.listen(10000, () => {
+  console.log('Server is running on port 10000');
 });
