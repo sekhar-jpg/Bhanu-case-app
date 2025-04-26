@@ -3,16 +3,19 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const Case = require('./models/Case');
+const path = require('path');
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Middleware
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true })); // <<== ADD THIS LINE!
 
-// Serve static files from 'public' folder
-app.use(express.static('public'));
+// Serve static files from public folder
+app.use(express.static(path.join(__dirname, 'public')));
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI, {
@@ -22,7 +25,7 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(() => console.log("MongoDB connected"))
 .catch(err => console.log("MongoDB connection error: ", err));
 
-// Case submission route (POST)
+// POST route to submit case
 app.post('/submit-case', async (req, res) => {
   try {
     const newCase = new Case(req.body);
@@ -34,7 +37,7 @@ app.post('/submit-case', async (req, res) => {
   }
 });
 
-// Get all cases route (GET)
+// GET route to fetch cases
 app.get('/cases', async (req, res) => {
   try {
     const cases = await Case.find();
@@ -45,7 +48,7 @@ app.get('/cases', async (req, res) => {
   }
 });
 
-// Home route
+// Home
 app.get('/', (req, res) => {
   res.send('Bhanu Reminder App is running!');
 });
