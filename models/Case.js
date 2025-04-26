@@ -2,53 +2,39 @@ const mongoose = require('mongoose');
 
 const caseSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  age: Number,
-  gender: String,
-  maritalStatus: String,
-  occupation: String,
-  address: String,
-  phone: String,
-  dateOfVisit: String,
-  complaints: [
-    {
-      complaint: String,
-      duration: String,
-      description: String
-    }
-  ],
-  historyOfPresentIllness: String,
-  pastHistory: {
-    childhoodDiseases: String,
-    surgeriesInjuries: String,
-    majorIllnesses: String
-  },
-  familyHistory: String,
-  personalHistory: {
-    appetite: String,
-    cravingsAversions: String,
-    thirst: String,
-    bowelMovement: String,
-    urine: String,
-    sleep: String,
-    dreams: String,
-    sweat: String,
-    thermalNature: String,
-    habits: String,
-    menstrualHistory: String
-  },
-  mentalSymptoms: String,
-  generalRemarks: String,
-  doctorObservations: String,
-  prescription: [
-    {
-      date: String,
-      remedyName: String,
-      potency: String,
-      dose: String,
-      instructions: String
-    }
-  ],
-  followUpDate: String
+  age: { type: Number, required: true },
+  gender: { type: String, required: true },
+  maritalStatus: { type: String },
+  occupation: { type: String },
+  address: { type: String },
+  phone: { type: String, required: true },
+  dateOfVisit: { type: Date },
+
+  chiefComplaints: { type: String }, // (Problem + Duration + Details)
+  historyOfPresentIllness: { type: String },
+  pastHistory: { type: String },
+  familyHistory: { type: String },
+
+  appetite: { type: String },
+  cravingsAversions: { type: String },
+  thirst: { type: String },
+  bowelMovement: { type: String },
+  urine: { type: String },
+  sleep: { type: String },
+  dreams: { type: String },
+  sweat: { type: String },
+  thermalNature: { type: String },
+  habits: { type: String },
+  menstrualHistory: { type: String },
+
+  mentalSymptoms: { type: String },
+  generalRemarks: { type: String },
+  doctorObservations: { type: String },
+
+  prescription: { type: String },
+  followUpDate: { type: Date, required: true },
 });
 
-module.exports = mongoose.model('Case', caseSchema);
+const Case = mongoose.model('Case', caseSchema);
+
+module.exports = Case;
