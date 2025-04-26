@@ -6,19 +6,13 @@
 <body>
   <h1>Add New Case</h1>
   <form action="https://bhanu-case-app.onrender.com/submit-case" method="POST">
-    <!-- Basic Patient Information -->
+
     <h2>1. Basic Patient Information</h2>
     <label>Name:</label><br>
     <input type="text" name="name" required><br><br>
 
-    <label>Age:</label><br>
-    <input type="number" name="age" required><br><br>
-
-    <label>Gender:</label><br>
-    <select name="gender" required>
-      <option value="Male">Male</option>
-      <option value="Female">Female</option>
-    </select><br><br>
+    <label>Age / Gender:</label><br>
+    <input type="text" name="ageGender"><br><br>
 
     <label>Marital Status:</label><br>
     <input type="text" name="maritalStatus"><br><br>
@@ -27,85 +21,56 @@
     <input type="text" name="occupation"><br><br>
 
     <label>Address:</label><br>
-    <textarea name="address"></textarea><br><br>
+    <input type="text" name="address"><br><br>
 
     <label>Phone / WhatsApp:</label><br>
     <input type="text" name="phone" required><br><br>
 
     <label>Date of Visit:</label><br>
-    <input type="date" name="dateOfVisit"><br><br>
+    <input type="date" name="dateOfVisit" id="dateOfVisit" required><br><br>
 
-    <!-- Chief Complaints -->
     <h2>2. Chief Complaints</h2>
-    <textarea name="chiefComplaints"></textarea><br><br>
+    <textarea name="chiefComplaints" rows="4" cols="50"></textarea><br><br>
 
-    <!-- History of Present Illness -->
     <h2>3. History of Present Illness</h2>
-    <textarea name="historyOfPresentIllness"></textarea><br><br>
+    <textarea name="historyPresentIllness" rows="4" cols="50"></textarea><br><br>
 
-    <!-- Past History -->
     <h2>4. Past History</h2>
-    <textarea name="pastHistory"></textarea><br><br>
+    <textarea name="pastHistory" rows="4" cols="50"></textarea><br><br>
 
-    <!-- Family History -->
     <h2>5. Family History</h2>
-    <textarea name="familyHistory"></textarea><br><br>
+    <textarea name="familyHistory" rows="4" cols="50"></textarea><br><br>
 
-    <!-- Personal History -->
     <h2>6. Personal History</h2>
-    <label>Appetite:</label><br>
-    <input type="text" name="appetite"><br><br>
+    <textarea name="personalHistory" rows="4" cols="50"></textarea><br><br>
 
-    <label>Cravings / Aversions:</label><br>
-    <input type="text" name="cravingsAversions"><br><br>
-
-    <label>Thirst:</label><br>
-    <input type="text" name="thirst"><br><br>
-
-    <label>Bowel Movement:</label><br>
-    <input type="text" name="bowelMovement"><br><br>
-
-    <label>Urine:</label><br>
-    <input type="text" name="urine"><br><br>
-
-    <label>Sleep:</label><br>
-    <input type="text" name="sleep"><br><br>
-
-    <label>Dreams:</label><br>
-    <input type="text" name="dreams"><br><br>
-
-    <label>Sweat:</label><br>
-    <input type="text" name="sweat"><br><br>
-
-    <label>Thermal Nature (Hot/Cold):</label><br>
-    <input type="text" name="thermalNature"><br><br>
-
-    <label>Habits (Tea, Coffee, Smoking, Alcohol, etc.):</label><br>
-    <input type="text" name="habits"><br><br>
-
-    <label>Menstrual History (if applicable):</label><br>
-    <input type="text" name="menstrualHistory"><br><br>
-
-    <!-- Mental Symptoms -->
     <h2>7. Mental Symptoms</h2>
-    <textarea name="mentalSymptoms"></textarea><br><br>
+    <textarea name="mentalSymptoms" rows="4" cols="50"></textarea><br><br>
 
-    <!-- General Remarks -->
     <h2>8. General Remarks</h2>
-    <textarea name="generalRemarks"></textarea><br><br>
+    <textarea name="generalRemarks" rows="4" cols="50"></textarea><br><br>
 
-    <!-- Observations by Doctor -->
     <h2>9. Observations by Doctor</h2>
-    <textarea name="doctorObservations"></textarea><br><br>
+    <textarea name="doctorObservations" rows="4" cols="50"></textarea><br><br>
 
-    <!-- Prescription -->
     <h2>Prescription</h2>
-    <textarea name="prescription"></textarea><br><br>
+    <textarea name="prescription" rows="4" cols="50"></textarea><br><br>
 
     <label>Follow-Up Date:</label><br>
-    <input type="date" name="followUpDate" required><br><br>
+    <input type="date" name="followUpDate" id="followUpDate" required><br><br>
 
     <button type="submit">Submit Case</button>
   </form>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const today = new Date();
+      document.getElementById('dateOfVisit').value = today.toISOString().substr(0, 10);
+
+      const followUp = new Date(today);
+      followUp.setDate(followUp.getDate() + 15);
+      document.getElementById('followUpDate').value = followUp.toISOString().substr(0, 10);
+    });
+  </script>
 </body>
 </html>
