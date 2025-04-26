@@ -3,46 +3,52 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 const app = express();
+
+// Middleware to parse JSON bodies
 app.use(bodyParser.json());
 
+// Define the Case schema
+const caseSchema = new mongoose.Schema({
+    name: String,
+    phone: String,
+    date: Date,
+    followUpDate: Date
+});
+
+const Case = mongoose.model('Case', caseSchema);
+
 // Connect to MongoDB
-const mongoURI = 'mongodb+srv://bhanuhomeopathy:sekhar123456@cluster0.wm2pxqs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.log('MongoDB connection error:', err));
+mongoose.connect('your_mongodb_uri_here', { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('MongoDB connected'))
+    .catch(err => console.log('MongoDB connection error:', err));
 
-// Define Case model
-const Case = mongoose.model('Case', new mongoose.Schema({
-  name: String,
-  phone: String,
-  date: Date,
-  followUpDate: Date
-}));
-
-// Submit case endpoint
+// Handle form submission
 app.post('/submit-case', async (req, res) => {
-  try {
-    const { name, phone } = req.body;
-    const today = new Date();
-    const followUpDate = new Date();
-    followUpDate.setDate(today.getDate() + 15); // 15 days later
+    const { name, phone, date, followUpDate } = req.body;
 
+    // Check if all required fields are present
+    if (!name || !phone || !date || !followUpDate) {
+        return res.status(400).json({ success: false, message: 'All fields are required' });
+    }
+
+    // Create a new Case document
     const newCase = new Case({
-      name,
-      phone,
-      date: today,
-      followUpDate
+        name,
+        phone,
+        date: new Date(date),
+        followUpDate: new Date(followUpDate)
     });
 
-    await newCase.save();
-    res.status(200).send('Case submitted successfully');
-  } catch (err) {
-    res.status(400).send(`Error submitting case: ${err}`);
-  }
+    try {
+        // Save the new case to the database
+        await newCase.save();
+        res.json({ success: true, message: 'Case submitted successfully' });
+    } catch (err) {
+        console.log('Error saving case:', err);
+        res.status(500).json({ success: false, message: 'Error saving case' });
+    }
 });
 
-// Start server
-const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => {
-  console.log(`Server started on port ${PORT}`);
-});
+// Start the server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
