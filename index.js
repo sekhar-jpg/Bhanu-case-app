@@ -17,12 +17,12 @@ const caseSchema = new mongoose.Schema({
 
 const Case = mongoose.model('Case', caseSchema);
 
-// Connect to MongoDB
-mongoose.connect('your_mongodb_uri_here', { useNewUrlParser: true, useUnifiedTopology: true })
+// Connect to MongoDB (Replace with your actual MongoDB URI)
+mongoose.connect('mongodb+srv://bhanuhomeopathy:sekhar123456@cluster0.wm2pxqs.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log('MongoDB connection error:', err));
 
-// Handle form submission
+// Handle form submission (POST request to /submit-case)
 app.post('/submit-case', async (req, res) => {
     const { name, phone, date, followUpDate } = req.body;
 
