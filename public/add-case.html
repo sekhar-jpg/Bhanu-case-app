@@ -2,50 +2,84 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Bhanu Homeopathy - Case Submission</title>
+    <title>Submit Full Case Sheet</title>
 </head>
 <body>
-    <h1>Submit Case Details</h1>
-    <form id="caseForm">
-        <label for="name">Patient Name:</label><br>
-        <input type="text" id="name" name="name" required><br><br>
+    <h1>Submit Full Case Sheet</h1>
+    <form action="https://bhanu-case-app.onrender.com/submit-case" method="POST">
+        <label>Name:</label><br>
+        <input type="text" name="name" required><br><br>
 
-        <label for="phone">Phone Number:</label><br>
-        <input type="text" id="phone" name="phone" required><br><br>
+        <label>Age:</label><br>
+        <input type="number" name="age"><br><br>
 
-        <label for="date">Case Submission Date:</label><br>
-        <input type="date" id="date" name="date" required><br><br>
+        <label>Gender:</label><br>
+        <input type="text" name="gender"><br><br>
 
-        <label for="followUpDate">Follow-up Date:</label><br>
-        <input type="date" id="followUpDate" name="followUpDate" required><br><br>
+        <label>Marital Status:</label><br>
+        <input type="text" name="maritalStatus"><br><br>
+
+        <label>Occupation:</label><br>
+        <input type="text" name="occupation"><br><br>
+
+        <label>Address:</label><br>
+        <input type="text" name="address"><br><br>
+
+        <label>Phone:</label><br>
+        <input type="text" name="phone" required><br><br>
+
+        <label>Date of Visit:</label><br>
+        <input type="date" name="dateOfVisit"><br><br>
+
+        <label>Chief Complaints:</label><br>
+        <textarea name="chiefComplaints"></textarea><br><br>
+
+        <label>History of Present Illness:</label><br>
+        <textarea name="historyOfPresentIllness"></textarea><br><br>
+
+        <label>Past History:</label><br>
+        <textarea name="pastHistory"></textarea><br><br>
+
+        <label>Family History:</label><br>
+        <textarea name="familyHistory"></textarea><br><br>
+
+        <label>Appetite:</label><br>
+        <input type="text" name="appetite"><br><br>
+
+        <label>Cravings / Aversions:</label><br>
+        <input type="text" name="cravingsAversions"><br><br>
+
+        <label>Thirst:</label><br>
+        <input type="text" name="thirst"><br><br>
+
+        <label>Bowel Movement:</label><br>
+        <input type="text" name="bowelMovement"><br><br>
+
+        <label>Urine:</label><br>
+        <input type="text" name="urine"><br><br>
+
+        <label>Sleep:</label><br>
+        <input type="text" name="sleep"><br><br>
+
+        <label>Dreams:</label><br>
+        <input type="text" name="dreams"><br><br>
+
+        <label>Sweat:</label><br>
+        <input type="text" name="sweat"><br><br>
+
+        <label>Thermal Nature:</label><br>
+        <input type="text" name="thermalNature"><br><br>
+
+        <label>Habits:</label><br>
+        <input type="text" name="habits"><br><br>
+
+        <label>Menstrual History (if applicable):</label><br>
+        <textarea name="menstrualHistory"></textarea><br><br>
+
+        <label>Mental Symptoms:</label><br>
+        <textarea name="mentalSymptoms"></textarea><br><br>
 
         <button type="submit">Submit Case</button>
     </form>
-
-    <script>
-        document.getElementById('caseForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
-
-            const name = document.getElementById('name').value;
-            const phone = document.getElementById('phone').value;
-            const date = document.getElementById('date').value;
-            const followUpDate = document.getElementById('followUpDate').value;
-
-            const response = await fetch('https://bhanu-case-app.onrender.com/submit-case', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ name, phone, date, followUpDate })
-            });
-
-            if (response.ok) {
-                alert('Case submitted successfully!');
-                document.getElementById('caseForm').reset();
-            } else {
-                alert('Error submitting case.');
-            }
-        });
-    </script>
 </body>
 </html>
