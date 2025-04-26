@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add New Case</title>
+</head>
+<body>
+  <h1>Add New Case</h1>
+  <form action="https://bhanu-case-app.onrender.com/submit-case" method="POST">
+    <label>Name:</label><br>
+    <input type="text" name="name" required><br><br>
+
+    <label>Age:</label><br>
+    <input type="number" name="age"><br><br>
+
+    <label>Gender:</label><br>
+    <select name="gender">
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+    </select><br><br>
+
+    <label>Phone:</label><br>
+    <input type="text" name="phone"><br><br>
+
+    <label>Symptoms:</label><br>
+    <textarea name="symptoms"></textarea><br><br>
+
+    <label>Diagnosis:</label><br>
+    <textarea name="diagnosis"></textarea><br><br>
+
+    <label>Prescription:</label><br>
+    <textarea name="prescription"></textarea><br><br>
+
+    <label>Follow-Up Date:</label><br>
+    <input type="date" name="followUpDate"><br><br>
+
+    <button type="submit">Submit Case</button>
+  </form>
+</body>
+</html>
