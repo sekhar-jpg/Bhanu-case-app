@@ -10,7 +10,9 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+
+// Serve static files from 'public' folder
+app.use(express.static('public'));
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI, {
@@ -46,25 +48,6 @@ app.get('/cases', async (req, res) => {
 // Home route
 app.get('/', (req, res) => {
   res.send('Bhanu Reminder App is running!');
-});
-
-// Add New Case Form Route
-app.get('/add-case', (req, res) => {
-  res.send(`
-    <h1>Add New Case</h1>
-    <form method="POST" action="/submit-case">
-      <label>Name:</label><br/>
-      <input type="text" name="name" required /><br/><br/>
-      
-      <label>Phone:</label><br/>
-      <input type="text" name="phone" required /><br/><br/>
-      
-      <label>Follow-Up Date:</label><br/>
-      <input type="date" name="followUpDate" required /><br/><br/>
-      
-      <button type="submit">Submit Case</button>
-    </form>
-  `);
 });
 
 app.listen(port, () => {
