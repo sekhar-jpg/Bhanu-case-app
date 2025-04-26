@@ -2,84 +2,60 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Submit Full Case Sheet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Submission Form</title>
 </head>
 <body>
-    <h1>Submit Full Case Sheet</h1>
-    <form action="https://bhanu-case-app.onrender.com/submit-case" method="POST">
-        <label>Name:</label><br>
-        <input type="text" name="name" required><br><br>
 
-        <label>Age:</label><br>
-        <input type="number" name="age"><br><br>
+    <h1>Submit Case</h1>
+    <form id="case-form">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br>
 
-        <label>Gender:</label><br>
-        <input type="text" name="gender"><br><br>
+        <label for="phone">Phone:</label>
+        <input type="text" id="phone" name="phone" required><br>
 
-        <label>Marital Status:</label><br>
-        <input type="text" name="maritalStatus"><br><br>
+        <label for="date">Date of Visit:</label>
+        <input type="date" id="date" name="date" required><br>
 
-        <label>Occupation:</label><br>
-        <input type="text" name="occupation"><br><br>
+        <label for="followUpDate">Follow-up Date:</label>
+        <input type="date" id="followUpDate" name="followUpDate" required><br>
 
-        <label>Address:</label><br>
-        <input type="text" name="address"><br><br>
-
-        <label>Phone:</label><br>
-        <input type="text" name="phone" required><br><br>
-
-        <label>Date of Visit:</label><br>
-        <input type="date" name="dateOfVisit"><br><br>
-
-        <label>Chief Complaints:</label><br>
-        <textarea name="chiefComplaints"></textarea><br><br>
-
-        <label>History of Present Illness:</label><br>
-        <textarea name="historyOfPresentIllness"></textarea><br><br>
-
-        <label>Past History:</label><br>
-        <textarea name="pastHistory"></textarea><br><br>
-
-        <label>Family History:</label><br>
-        <textarea name="familyHistory"></textarea><br><br>
-
-        <label>Appetite:</label><br>
-        <input type="text" name="appetite"><br><br>
-
-        <label>Cravings / Aversions:</label><br>
-        <input type="text" name="cravingsAversions"><br><br>
-
-        <label>Thirst:</label><br>
-        <input type="text" name="thirst"><br><br>
-
-        <label>Bowel Movement:</label><br>
-        <input type="text" name="bowelMovement"><br><br>
-
-        <label>Urine:</label><br>
-        <input type="text" name="urine"><br><br>
-
-        <label>Sleep:</label><br>
-        <input type="text" name="sleep"><br><br>
-
-        <label>Dreams:</label><br>
-        <input type="text" name="dreams"><br><br>
-
-        <label>Sweat:</label><br>
-        <input type="text" name="sweat"><br><br>
-
-        <label>Thermal Nature:</label><br>
-        <input type="text" name="thermalNature"><br><br>
-
-        <label>Habits:</label><br>
-        <input type="text" name="habits"><br><br>
-
-        <label>Menstrual History (if applicable):</label><br>
-        <textarea name="menstrualHistory"></textarea><br><br>
-
-        <label>Mental Symptoms:</label><br>
-        <textarea name="mentalSymptoms"></textarea><br><br>
-
-        <button type="submit">Submit Case</button>
+        <button type="submit">Submit</button>
     </form>
+
+    <script>
+        document.getElementById('case-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const data = {};
+
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            // Send form data to the server using fetch
+            fetch('/submit-case', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Case submitted successfully');
+                } else {
+                    alert('Failed to submit case');
+                }
+            })
+            .catch(error => {
+                alert('Error submitting form');
+            });
+        });
+    </script>
+
 </body>
 </html>
