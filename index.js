@@ -19,7 +19,7 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(() => console.log("MongoDB connected"))
 .catch(err => console.log("MongoDB connection error: ", err));
 
-// Case submission route
+// Case submission route (POST)
 app.post('/submit-case', async (req, res) => {
   try {
     const newCase = new Case(req.body);
@@ -31,7 +31,7 @@ app.post('/submit-case', async (req, res) => {
   }
 });
 
-// Case list route
+// Get all cases route (GET)
 app.get('/cases', async (req, res) => {
   try {
     const cases = await Case.find();
@@ -50,4 +50,3 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
 });
-
