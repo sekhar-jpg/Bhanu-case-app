@@ -1,79 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Bhanu Homeopathy - Case Management</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f2f2f2;
-    }
-    header {
-      background-color: #ffffff;
-      padding: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
+<!-- Mobile optimization code ready ga istanu -->
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 0;
+  }
+  header {
+    background-color: #ffffff;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  header img {
+    width: 150px;
+    height: auto;
+  }
+  h1 {
+    text-align: center;
+    margin-top: 20px;
+    color: #333333;
+  }
+  .container {
+    max-width: 900px;
+    margin: 20px auto;
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    border-radius: 8px;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  label {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  input, textarea, select {
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 100%;
+  }
+  button {
+    margin-top: 20px;
+    padding: 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #45a049;
+  }
+  @media (max-width: 600px) {
     header img {
-      width: 150px;
-      height: auto;
-    }
-    h1 {
-      text-align: center;
-      color: #333333;
-      margin-top: 20px;
+      width: 120px;
     }
     .container {
-      max-width: 500px;
-      margin: 20px auto;
-      padding: 20px;
-      background-color: #ffffff;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-      border-radius: 8px;
+      margin: 10px;
+      padding: 10px;
     }
-    .button {
-      display: block;
-      width: 100%;
-      padding: 15px;
-      margin: 10px 0;
+    h1 {
+      font-size: 22px;
+    }
+    input, textarea, select {
       font-size: 16px;
-      background-color: #4CAF50;
-      color: white;
-      text-align: center;
-      border: none;
-      border-radius: 5px;
-      text-decoration: none;
     }
-    .button:hover {
-      background-color: #45a049;
+    button {
+      font-size: 18px;
+      padding: 14px;
     }
-    @media (max-width: 600px) {
-      header img {
-        width: 120px;
-      }
-      .container {
-        margin: 10px;
-      }
-    }
-  </style>
-</head>
-<body>
-
-<header>
-  <img src="/bhanu-homeopathy-logo.png" alt="Bhanu Homeopathy Logo">
-</header>
-
-<h1>Bhanu Homeopathy</h1>
-
-<div class="container">
-  <a href="add-case.html" class="button">➕ Add New Case</a>
-  <a href="followups.html" class="button">📅 View Follow-up Cases</a>
-</div>
-
-</body>
-</html>
+  }
+</style>
