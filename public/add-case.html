@@ -1,86 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Follow Up Cases</title>
-    <style>
-        #follow-ups-btn {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            margin: 10px 0;
-        }
-
-        #follow-ups-list {
-            margin-top: 20px;
-        }
-
-        #follow-ups-list ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        #follow-ups-list li {
-            padding: 10px;
-            background-color: #f2f2f2;
-            margin-bottom: 5px;
-            border-radius: 5px;
-        }
-
-        #loading {
-            font-size: 18px;
-            color: #888;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Add New Case - Bhanu Homeopathy</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #ffffff;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    header img {
+      width: 150px;
+      height: auto;
+    }
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+      color: #333333;
+    }
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      background-color: #ffffff;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      border-radius: 8px;
+    }
+    form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      display: block;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    textarea {
+      resize: vertical;
+    }
+    .full-width {
+      grid-column: 1 / 3;
+    }
+    .submit-button {
+      grid-column: 1 / 3;
+      text-align: center;
+      margin-top: 20px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    @media (max-width: 600px) {
+      form {
+        grid-template-columns: 1fr;
+      }
+      .full-width, .submit-button {
+        grid-column: 1 / 2;
+      }
+      header img {
+        width: 120px;
+      }
+      .container {
+        margin: 10px;
+        padding: 10px;
+      }
+    }
+  </style>
 </head>
 <body>
 
-    <h1>Follow Up Cases</h1>
+<header>
+  <img src="/bhanu-homeopathy-logo.png" alt="Bhanu Homeopathy Logo">
+</header>
 
-    <!-- Button to trigger Follow Ups -->
-    <button id="follow-ups-btn">Follow Ups</button>
-    
-    <!-- Where the Follow Ups will be displayed -->
-    <div id="follow-ups-list"></div>
+<h1>New Case Entry - Bhanu Homeopathy</h1>
 
-    <script>
-        document.getElementById("follow-ups-btn").addEventListener("click", async function() {
-            // Show loading message
-            document.getElementById("follow-ups-list").innerHTML = "<p id='loading'>Loading follow-up cases...</p>";
+<div class="container">
+  <form id="caseForm">
+    <div>
+      <label for="name">Patient Name</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+    <div>
+      <label for="phone">Phone Number</label>
+      <input type="text" id="phone" name="phone" required>
+    </div>
+    <div class="full-width">
+      <label for="chiefComplaints">Chief Complaints</label>
+      <textarea id="chiefComplaints" name="chiefComplaints" rows="3" required></textarea>
+    </div>
+    <div class="full-width">
+      <label for="mentalSymptoms">Mental Symptoms</label>
+      <textarea id="mentalSymptoms" name="mentalSymptoms" rows="3"></textarea>
+    </div>
+    <div>
+      <label for="dateOfVisit">Date of Visit</label>
+      <input type="date" id="dateOfVisit" name="dateOfVisit" required>
+    </div>
+    <div>
+      <label for="followUpDate">Follow-up Date</label>
+      <input type="date" id="followUpDate" name="followUpDate">
+    </div>
+    <div class="full-width">
+      <label for="prescription">Prescription</label>
+      <textarea id="prescription" name="prescription" rows="3"></textarea>
+    </div>
+    <div class="submit-button">
+      <button type="submit">Submit Case</button>
+    </div>
+  </form>
+</div>
 
-            try {
-                // Make the API call to fetch follow-up cases
-                const response = await fetch("https://bhanu-case-app.onrender.com/due-followups");
+<script>
+  document.getElementById('caseForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
 
-                // If the response is okay
-                if (response.ok) {
-                    const followups = await response.json();
-                    
-                    // If there are no follow-ups
-                    if (followups.length === 0) {
-                        document.getElementById("follow-ups-list").innerHTML = "<p>No follow-ups today.</p>";
-                    } else {
-                        // Display the list of follow-up cases
-                        let listHtml = "<ul>";
-                        followups.forEach(followup => {
-                            listHtml += `<li>Name: ${followup.name}, Phone: ${followup.phone}, Follow-up Date: ${new Date(followup.followUpDate).toLocaleDateString()}</li>`;
-                        });
-                        listHtml += "</ul>";
-                        document.getElementById("follow-ups-list").innerHTML = listHtml;
-                    }
-                } else {
-                    document.getElementById("follow-ups-list").innerHTML = "<p>Error loading follow-up cases. Please try again.</p>";
-                }
-            } catch (error) {
-                document.getElementById("follow-ups-list").innerHTML = "<p>Error fetching data. Please try again.</p>";
-                console.error("Error fetching follow-ups:", error);
-            }
-        });
-    </script>
+    const formData = {
+      name: document.getElementById('name').value,
+      phone: document.getElementById('phone').value,
+      chiefComplaints: document.getElementById('chiefComplaints').value,
+      mentalSymptoms: document.getElementById('mentalSymptoms').value,
+      dateOfVisit: document.getElementById('dateOfVisit').value,
+      followUpDate: document.getElementById('followUpDate').value,
+      prescription: document.getElementById('prescription').value
+    };
+
+    try {
+      const response = await fetch('/submit-case', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        alert('Case submitted successfully!');
+        document.getElementById('caseForm').reset();
+      } else {
+        alert('Error: ' + result.error);
+      }
+    } catch (error) {
+      console.error('Error submitting case:', error);
+      alert('An error occurred. Please try again.');
+    }
+  });
+</script>
 
 </body>
 </html>
