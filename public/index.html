@@ -1,86 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your App Title</title>
-    <style>
-        #follow-ups-btn {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            margin: 10px 0;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Follow-Up Cases</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
 
-        #follow-ups-list {
-            margin-top: 20px;
-        }
+    h1 {
+      text-align: center;
+    }
 
-        #follow-ups-list ul {
-            list-style-type: none;
-            padding: 0;
-        }
+    #followUpCases {
+      margin-top: 20px;
+    }
 
-        #follow-ups-list li {
-            padding: 10px;
-            background-color: #f2f2f2;
-            margin-bottom: 5px;
-            border-radius: 5px;
-        }
-
-        #loading {
-            font-size: 18px;
-            color: #888;
-        }
-    </style>
+    .case {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin: 10px 0;
+    }
+  </style>
 </head>
 <body>
+  <h1>Follow-Up Cases</h1>
+  <button id="loadFollowUps">Load Follow-Up Cases</button>
+  <div id="followUpCases"></div>
 
-    <h1>Follow Up Cases</h1>
+  <script>
+    document.getElementById('loadFollowUps').addEventListener('click', function() {
+      fetch('/follow-ups')
+        .then(response => response.json())
+        .then(data => {
+          const followUpList = document.getElementById('followUpCases');
+          followUpList.innerHTML = ''; // Clear previous list
 
-    <!-- Button to trigger Follow Ups -->
-    <button id="follow-ups-btn">Follow Ups</button>
-    
-    <!-- Where the Follow Ups will be displayed -->
-    <div id="follow-ups-list"></div>
-
-    <script>
-        document.getElementById("follow-ups-btn").addEventListener("click", async function() {
-            // Show loading message
-            document.getElementById("follow-ups-list").innerHTML = "<p id='loading'>Loading follow-up cases...</p>";
-
-            try {
-                // Make the API call to fetch follow-up cases
-                const response = await fetch("/due-followups");
-
-                // If the response is okay
-                if (response.ok) {
-                    const followups = await response.json();
-                    
-                    // If there are no follow-ups
-                    if (followups.length === 0) {
-                        document.getElementById("follow-ups-list").innerHTML = "<p>No follow-ups today.</p>";
-                    } else {
-                        // Display the list of follow-up cases
-                        let listHtml = "<ul>";
-                        followups.forEach(followup => {
-                            listHtml += `<li>Name: ${followup.name}, Phone: ${followup.phone}, Follow-up Date: ${new Date(followup.followUpDate).toLocaleDateString()}</li>`;
-                        });
-                        listHtml += "</ul>";
-                        document.getElementById("follow-ups-list").innerHTML = listHtml;
-                    }
-                } else {
-                    document.getElementById("follow-ups-list").innerHTML = "<p>Error loading follow-up cases. Please try again.</p>";
-                }
-            } catch (error) {
-                document.getElementById("follow-ups-list").innerHTML = "<p>Error fetching data. Please try again.</p>";
-                console.error("Error fetching follow-ups:", error);
-            }
+          if (data.length > 0) {
+            data.forEach(caseItem => {
+              const caseElement = document.createElement('div');
+              caseElement.classList.add('case');
+              caseElement.innerHTML = `
+                <p><strong>Name:</strong> ${caseItem.name}</p>
+                <p><strong>Phone:</strong> ${caseItem.phone}</p>
+                <p><strong>Follow-Up Date:</strong> ${new Date(caseItem.followUpDate).toLocaleDateString()}</p>
+              `;
+              followUpList.appendChild(caseElement);
+            });
+          } else {
+            followUpList.innerHTML = '<p>No follow-up cases available.</p>';
+          }
+        })
+        .catch(error => {
+          console.error('Error loading follow-up cases:', error);
+          alert('Error loading follow-up cases. Please try again.');
         });
-    </script>
-
+    });
+  </script>
 </body>
 </html>
