@@ -1,88 +1,30 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
+const path = require('path');
+require('dotenv').config(); // This will load the environment variables from .env file
+
 const app = express();
 const port = process.env.PORT || 3000;
 
-// MongoDB Connection
-mongoose.connect('mongodb+srv://bhanuhomeopathy:sekhar123456@cluster0.wm2pxqs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
+// MongoDB Connection using the connection string from .env
+mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+}).then(() => {
+  console.log("MongoDB connected successfully!");
+}).catch(err => {
+  console.error("Error connecting to MongoDB:", err);
 });
 
-// Define Schema
-const caseSchema = new mongoose.Schema({
-  name: String,
-  age: Number,
-  gender: String,
-  maritalStatus: String,
-  occupation: String,
-  address: String,
-  phone: String,
-  dateOfVisit: Date,
-  chiefComplaints: String,
-  historyOfPresentIllness: String,
-  pastHistory: String,
-  familyHistory: String,
-  appetite: String,
-  cravingsAversions: String,
-  thirst: String,
-  bowelMovement: String,
-  urine: String,
-  sleep: String,
-  dreams: String,
-  sweat: String,
-  thermalNature: String,
-  habits: String,
-  menstrualHistory: String,
-  mentalSymptoms: String,
-  generalRemarks: String,
-  date: { type: Date, default: Date.now },
-  followUpDate: { type: Date },
-});
-
-// Create Model
-const Case = mongoose.model('Case', caseSchema);
-
-// Middleware
-app.use(bodyParser.json());
+// Serve static files from 'public' folder
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
-
-// 1. Submit Case
-app.post('/submit-case', async (req, res) => {
-  try {
-    const caseData = req.body;
-    const newCase = new Case(caseData);
-    await newCase.save();
-    res.status(200).send('Case submitted successfully');
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error submitting case');
-  }
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// 2. Get Today's Due Follow-ups
-app.get('/due-followups', async (req, res) => {
-  try {
-    const today = new Date();
-    today.setUTCHours(0, 0, 0, 0);
-
-    const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1);
-
-    const duePatients = await Case.find({
-      followUpDate: { $gte: today, $lt: tomorrow }
-    });
-
-    res.status(200).json(duePatients);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error fetching due follow-ups');
-  }
-});
-
-// Start Server
+// Start the server
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  console.log(`Server is running on port ${port}`);
 });
