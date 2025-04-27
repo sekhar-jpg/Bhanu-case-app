@@ -1,9 +1,12 @@
+// Import necessary packages
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-require('dotenv').config(); // This will load the environment variables from .env file
+require('dotenv').config(); // This will load the environment variables from the .env file
 
 const app = express();
+
+// Use the port from environment variable or default to 3000
 const port = process.env.PORT || 3000;
 
 // MongoDB Connection using the connection string from .env
@@ -74,7 +77,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Start the server
+// Start the server and bind to the specified port
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
