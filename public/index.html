@@ -1,52 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Case Submission</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Case</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>Submit Case</h1>
+    <h1>Submit Patient Case</h1>
 
-  <form id="submitCaseForm">
-    <!-- Patient Details Form -->
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" required><br>
+    <form id="caseForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
 
-    <label for="age">Age:</label>
-    <input type="number" id="age" name="age" required><br>
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" required><br><br>
 
-    <label for="gender">Gender:</label>
-    <select id="gender" name="gender" required>
-      <option value="Male">Male</option>
-      <option value="Female">Female</option>
-    </select><br>
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender" required>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select><br><br>
 
-    <label for="maritalStatus">Marital Status:</label>
-    <input type="text" id="maritalStatus" name="maritalStatus" required><br>
+        <label for="maritalStatus">Marital Status:</label>
+        <input type="text" id="maritalStatus" name="maritalStatus"><br><br>
 
-    <label for="occupation">Occupation:</label>
-    <input type="text" id="occupation" name="occupation" required><br>
+        <label for="occupation">Occupation:</label>
+        <input type="text" id="occupation" name="occupation"><br><br>
 
-    <label for="address">Address:</label>
-    <input type="text" id="address" name="address" required><br>
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address"><br><br>
 
-    <label for="phone">Phone:</label>
-    <input type="tel" id="phone" name="phone" required><br>
+        <label for="phone">Phone:</label>
+        <input type="text" id="phone" name="phone" required><br><br>
 
-    <label for="dateOfVisit">Date of Visit:</label>
-    <input type="date" id="dateOfVisit" name="dateOfVisit" required><br>
+        <label for="dateOfVisit">Date of Visit:</label>
+        <input type="date" id="dateOfVisit" name="dateOfVisit" required><br><br>
 
-    <label for="chiefComplaints">Chief Complaints:</label>
-    <textarea id="chiefComplaints" name="chiefComplaints"></textarea><br>
+        <label for="chiefComplaints">Chief Complaints:</label>
+        <input type="text" id="chiefComplaints" name="chiefComplaints"><br><br>
 
-    <button type="submit">Submit Case</button>
-  </form>
+        <label for="historyOfPresentIllness">History of Present Illness:</label>
+        <input type="text" id="historyOfPresentIllness" name="historyOfPresentIllness"><br><br>
 
-  <!-- Case Details Display -->
-  <div id="case-details"></div>
+        <label for="pastHistory">Past History:</label>
+        <input type="text" id="pastHistory" name="pastHistory"><br><br>
 
-  <script src="script.js"></script>
+        <label for="familyHistory">Family History:</label>
+        <input type="text" id="familyHistory" name="familyHistory"><br><br>
+
+        <label for="appetite">Appetite:</label>
+        <input type="text" id="appetite" name="appetite"><br><br>
+
+        <label for="cravingsAversions">Cravings/Aversions:</label>
+        <input type="text" id="cravingsAversions" name="cravingsAversions"><br><br>
+
+        <label for="thirst">Thirst:</label>
+        <input type="text" id="thirst" name="thirst"><br><br>
+
+        <label for="bowelMovement">Bowel Movement:</label>
+        <input type="text" id="bowelMovement" name="bowelMovement"><br><br>
+
+        <label for="urine">Urine:</label>
+        <input type="text" id="urine" name="urine"><br><br>
+
+        <label for="sleep">Sleep:</label>
+        <input type="text" id="sleep" name="sleep"><br><br>
+
+        <label for="dreams">Dreams:</label>
+        <input type="text" id="dreams" name="dreams"><br><br>
+
+        <label for="sweat">Sweat:</label>
+        <input type="text" id="sweat" name="sweat"><br><br>
+
+        <label for="thermalNature">Thermal Nature:</label>
+        <input type="text" id="thermalNature" name="thermalNature"><br><br>
+
+        <label for="habits">Habits:</label>
+        <input type="text" id="habits" name="habits"><br><br>
+
+        <label for="menstrualHistory">Menstrual History:</label>
+        <input type="text" id="menstrualHistory" name="menstrualHistory"><br><br>
+
+        <label for="mentalSymptoms">Mental Symptoms:</label>
+        <input type="text" id="mentalSymptoms" name="mentalSymptoms"><br><br>
+
+        <label for="generalRemarks">General Remarks:</label>
+        <input type="text" id="generalRemarks" name="generalRemarks"><br><br>
+
+        <label for="doctorObservations">Doctor Observations:</label>
+        <input type="text" id="doctorObservations" name="doctorObservations"><br><br>
+
+        <label for="prescription">Prescription:</label>
+        <input type="text" id="prescription" name="prescription"><br><br>
+
+        <button type="submit">Submit Case</button>
+    </form>
+
+    <div id="successMessage" style="display:none;">
+        <h3>Case Submitted Successfully!</h3>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
