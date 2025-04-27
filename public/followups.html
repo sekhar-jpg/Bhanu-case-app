@@ -2,62 +2,92 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Follow-up Cases</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Follow-up Cases - Bhanu Homeopathy</title>
   <style>
-    /* Table Styling */
     body {
       font-family: Arial, sans-serif;
-      margin: 20px;
-      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+      background-color: #f2f2f2;
+    }
+    header {
+      background-color: #ffffff;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    header img {
+      width: 150px;
+      height: auto;
+    }
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+      color: #333333;
+    }
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      background-color: #ffffff;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
     }
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
-      background-color: white;
     }
     th, td {
       padding: 12px;
-      border: 1px solid #ccc;
-      text-align: center;
-    }
-    th {
-      background-color: #007bff;
-      color: white;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
     }
     tr:nth-child(even) {
-      background-color: #f2f2f2;
+      background-color: #f9f9f9;
     }
-    .header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .header img {
-      width: 150px;
-      height: auto;
-      margin-bottom: 10px;
+    tr:hover {
+      background-color: #f1f1f1;
     }
     .back-button {
       display: inline-block;
-      margin-top: 30px;
-      text-decoration: none;
-      background-color: #28a745;
+      margin-top: 20px;
+      padding: 12px 20px;
+      background-color: #4CAF50;
       color: white;
-      padding: 10px 20px;
+      text-decoration: none;
       border-radius: 5px;
-      font-size: 16px;
+    }
+    .back-button:hover {
+      background-color: #45a049;
+    }
+    @media (max-width: 600px) {
+      header img {
+        width: 120px;
+      }
+      .container {
+        margin: 10px;
+        padding: 10px;
+      }
+      table th, table td {
+        padding: 8px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="header">
-    <img src="https://via.placeholder.com/150x50?text=Bhanu+Clinic" alt="Clinic Logo">
-    <h1>Follow-up Cases</h1>
-  </div>
+<header>
+  <img src="/bhanu-homeopathy-logo.png" alt="Bhanu Homeopathy Logo">
+</header>
 
-  <table id="followup-table">
+<h1>Follow-up Cases</h1>
+
+<div class="container">
+  <table id="followupsTable">
     <thead>
       <tr>
         <th>Name</th>
@@ -65,39 +95,47 @@
         <th>Follow-up Date</th>
       </tr>
     </thead>
-    <tbody id="followup-body">
-      <!-- Data will be loaded here -->
+    <tbody>
+      <!-- Data will be populated here -->
     </tbody>
   </table>
 
-  <div style="text-align: center;">
-    <a class="back-button" href="/">🏠 Back to Home</a>
-  </div>
+  <a href="index.html" class="back-button">🏠 Back to Home</a>
+</div>
 
-  <script>
-    async function loadFollowups() {
-      try {
-        const response = await fetch('/follow-ups');
-        const data = await response.json();
-        const tbody = document.getElementById('followup-body');
-        tbody.innerHTML = '';
+<script>
+  async function loadFollowUps() {
+    try {
+      const response = await fetch('/follow-ups');
+      const data = await response.json();
 
-        data.forEach(caseItem => {
+      const tableBody = document.querySelector('#followupsTable tbody');
+      tableBody.innerHTML = '';
+
+      if (Array.isArray(data)) {
+        data.forEach(followUp => {
           const row = document.createElement('tr');
           row.innerHTML = `
-            <td>${caseItem.name}</td>
-            <td>${caseItem.phone}</td>
-            <td>${new Date(caseItem.followUpDate).toLocaleDateString('en-GB')}</td>
+            <td>${followUp.name}</td>
+            <td>${followUp.phone}</td>
+            <td>${new Date(followUp.followUpDate).toLocaleDateString()}</td>
           `;
-          tbody.appendChild(row);
+          tableBody.appendChild(row);
         });
-      } catch (error) {
-        console.error('Error loading follow-ups:', error);
+      } else {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td colspan="3" style="text-align:center;">No follow-up cases found</td>
+        `;
+        tableBody.appendChild(row);
       }
+    } catch (error) {
+      console.error('Error fetching follow-up cases:', error);
     }
+  }
 
-    loadFollowups();
-  </script>
+  loadFollowUps();
+</script>
 
 </body>
 </html>
