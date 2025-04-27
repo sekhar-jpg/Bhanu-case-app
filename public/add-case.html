@@ -3,26 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Case Submission Form</title>
+    <title>Follow Up Cases</title>
+    <style>
+        #follow-ups-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            margin: 10px 0;
+        }
+
+        #follow-ups-list {
+            margin-top: 20px;
+        }
+
+        #follow-ups-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #follow-ups-list li {
+            padding: 10px;
+            background-color: #f2f2f2;
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
+
+        #loading {
+            font-size: 18px;
+            color: #888;
+        }
+    </style>
 </head>
 <body>
 
-    <h1>Submit a Case</h1>
-    <form action="http://localhost:5000/submit-case" method="POST">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required><br>
+    <h1>Follow Up Cases</h1>
 
-        <label for="phone">Phone:</label>
-        <input type="text" id="phone" name="phone" required><br>
+    <!-- Button to trigger Follow Ups -->
+    <button id="follow-ups-btn">Follow Ups</button>
+    
+    <!-- Where the Follow Ups will be displayed -->
+    <div id="follow-ups-list"></div>
 
-        <label for="date">Date:</label>
-        <input type="date" id="date" name="date" required><br>
+    <script>
+        document.getElementById("follow-ups-btn").addEventListener("click", async function() {
+            // Show loading message
+            document.getElementById("follow-ups-list").innerHTML = "<p id='loading'>Loading follow-up cases...</p>";
 
-        <label for="followUpDate">Follow-Up Date:</label>
-        <input type="date" id="followUpDate" name="followUpDate" required><br>
+            try {
+                // Make the API call to fetch follow-up cases
+                const response = await fetch("https://bhanu-case-app.onrender.com/due-followups");
 
-        <input type="submit" value="Submit">
-    </form>
+                // If the response is okay
+                if (response.ok) {
+                    const followups = await response.json();
+                    
+                    // If there are no follow-ups
+                    if (followups.length === 0) {
+                        document.getElementById("follow-ups-list").innerHTML = "<p>No follow-ups today.</p>";
+                    } else {
+                        // Display the list of follow-up cases
+                        let listHtml = "<ul>";
+                        followups.forEach(followup => {
+                            listHtml += `<li>Name: ${followup.name}, Phone: ${followup.phone}, Follow-up Date: ${new Date(followup.followUpDate).toLocaleDateString()}</li>`;
+                        });
+                        listHtml += "</ul>";
+                        document.getElementById("follow-ups-list").innerHTML = listHtml;
+                    }
+                } else {
+                    document.getElementById("follow-ups-list").innerHTML = "<p>Error loading follow-up cases. Please try again.</p>";
+                }
+            } catch (error) {
+                document.getElementById("follow-ups-list").innerHTML = "<p>Error fetching data. Please try again.</p>";
+                console.error("Error fetching follow-ups:", error);
+            }
+        });
+    </script>
 
 </body>
 </html>
