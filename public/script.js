@@ -4,10 +4,19 @@ document.getElementById("submitCaseForm").addEventListener("submit", function(ev
   // Collect form data
   const formData = new FormData(this);
 
-  // Submit the case data to the backend
+  // Convert form data to a plain object for JSON submission
+  const caseData = {};
+  formData.forEach((value, key) => {
+    caseData[key] = value;
+  });
+
+  // Send case data as JSON to the backend
   fetch('/submit-case', {
     method: 'POST',
-    body: formData
+    headers: {
+      'Content-Type': 'application/json', // Ensure data is sent as JSON
+    },
+    body: JSON.stringify(caseData),
   })
   .then(response => response.json())
   .then(data => {
@@ -23,6 +32,10 @@ function displayCaseDetails(caseData) {
   // Get the case details div
   const caseDetailsDiv = document.getElementById("case-details");
 
+  // Format dates
+  const visitDate = new Date(caseData.dateOfVisit).toLocaleDateString();
+  const followUpDate = new Date(caseData.followUpDate).toLocaleDateString();
+
   // Populate the case details
   caseDetailsDiv.innerHTML = `
     <h2>Case Details</h2>
@@ -34,9 +47,9 @@ function displayCaseDetails(caseData) {
       <li><strong>Occupation:</strong> ${caseData.occupation}</li>
       <li><strong>Address:</strong> ${caseData.address}</li>
       <li><strong>Phone:</strong> ${caseData.phone}</li>
-      <li><strong>Date of Visit:</strong> ${caseData.dateOfVisit}</li>
+      <li><strong>Date of Visit:</strong> ${visitDate}</li>
       <li><strong>Chief Complaints:</strong> ${caseData.chiefComplaints}</li>
-      <li><strong>Follow-Up Date:</strong> ${caseData.followUpDate}</li>
+      <li><strong>Follow-Up Date:</strong> ${followUpDate}</li>
     </ul>
   `;
 }
