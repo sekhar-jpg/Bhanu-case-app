@@ -1,28 +1,26 @@
-// Import necessary packages
 const express = require('express');
 const mongoose = require('mongoose');
-const path = require('path');
-require('dotenv').config(); // This will load the environment variables from the .env file
+const bodyParser = require('body-parser');
+const path = require('path'); // NEW: To handle path
 
+// Initialize express app
 const app = express();
 
-// Use the port from environment variable or default to 3000
-const port = process.env.PORT || 3000;
-
-// MongoDB Connection using the connection string from .env
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
-  console.log("MongoDB connected successfully!");
-}).catch(err => {
-  console.error("Error connecting to MongoDB:", err);
-});
+// Middleware to parse JSON data
+app.use(bodyParser.json());
 
 // Serve static files from 'public' folder
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static('public')); // 🛠 Important Line
 
-// Case Schema Definition (Ensure the followUpDate is included)
+// MongoDB Connection
+mongoose.connect('mongodb+srv://bhanuhomeopathy:sekhar123456@cluster0.wm2pxqs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log('MongoDB connected successfully!'))
+.catch(err => console.log('MongoDB connection error:', err));
+
+// MongoDB Schema for the Case Sheet
 const caseSchema = new mongoose.Schema({
   name: String,
   age: Number,
@@ -48,36 +46,89 @@ const caseSchema = new mongoose.Schema({
   habits: String,
   menstrualHistory: String,
   mentalSymptoms: String,
-  followUpDate: Date, // Added follow-up date
+  generalRemarks: String,
+  doctorObservations: String,
+  prescription: String,
+  followUpDate: Date,
 });
 
+// Model for Case Sheet
 const Case = mongoose.model('Case', caseSchema);
 
-// Route to fetch follow-up cases (due for follow-up)
-app.get('/follow-ups', async (req, res) => {
+// Route for submitting a new case
+app.post('/submit-case', async (req, res) => {
   try {
-    const today = new Date();
-    const followUpCases = await Case.find({
-      followUpDate: { $gte: today } // Fetch cases where followUpDate is today or in the future
+    const {
+      name, age, gender, maritalStatus, occupation, address, phone, dateOfVisit,
+      chiefComplaints, historyOfPresentIllness, pastHistory, familyHistory, appetite,
+      cravingsAversions, thirst, bowelMovement, urine, sleep, dreams, sweat, thermalNature,
+      habits, menstrualHistory, mentalSymptoms, generalRemarks, doctorObservations, prescription,
+      followUpDate
+    } = req.body;
+
+    const newCase = new Case({
+      name, age, gender, maritalStatus, occupation, address, phone, dateOfVisit,
+      chiefComplaints, historyOfPresentIllness, pastHistory, familyHistory, appetite,
+      cravingsAversions, thirst, bowelMovement, urine, sleep, dreams, sweat, thermalNature,
+      habits, menstrualHistory, mentalSymptoms, generalRemarks, doctorObservations, prescription,
+      followUpDate
     });
 
-    if (followUpCases.length > 0) {
-      res.json(followUpCases);
-    } else {
-      res.status(404).json({ message: 'No follow-up cases found.' });
-    }
+    await newCase.save();
+    res.status(201).json({ message: 'Case submitted successfully', case: newCase });
   } catch (error) {
-    console.error("Error fetching follow-up cases:", error);
-    res.status(500).json({ message: 'Error loading follow-up cases. Please try again.' });
+    console.error(error);
+    res.status(500).json({ error: 'Error submitting the case. Please try again.' });
   }
 });
 
-// Serve index.html for the homepage route
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// Route for fetching all follow-up cases
+app.get('/follow-ups', async (req, res) => {
+  try {
+    const today = new Date();
+    const followUps = await Case.find({
+      followUpDate: { $gte: today }
+    });
+
+    if (followUps.length > 0) {
+      res.status(200).json(followUps);
+    } else {
+      res.status(200).json({ message: 'No follow-up cases found' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error loading follow-up cases. Please try again.' });
+  }
 });
 
-// Start the server and bind to the specified port
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+// Route for updating follow-up date
+app.put('/update-follow-up/:id', async (req, res) => {
+  try {
+    const caseId = req.params.id;
+    const caseData = req.body;
+
+    const followUpDate = new Date(caseData.dateOfVisit);
+    followUpDate.setDate(followUpDate.getDate() + 15);
+
+    const updatedCase = await Case.findByIdAndUpdate(
+      caseId,
+      { followUpDate: followUpDate },
+      { new: true }
+    );
+
+    if (!updatedCase) {
+      return res.status(404).json({ error: 'Case not found' });
+    }
+
+    res.status(200).json({ message: 'Follow-up date updated successfully', case: updatedCase });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error updating the follow-up date. Please try again.' });
+  }
+});
+
+// Start the server
+const PORT = process.env.PORT || 10000; // use port 10000 as you already did
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
