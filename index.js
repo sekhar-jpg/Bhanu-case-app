@@ -62,9 +62,12 @@ app.post('/submit-case', async (req, res) => {
       name, age, gender, maritalStatus, occupation, address, phone, dateOfVisit,
       chiefComplaints, historyOfPresentIllness, pastHistory, familyHistory, appetite,
       cravingsAversions, thirst, bowelMovement, urine, sleep, dreams, sweat, thermalNature,
-      habits, menstrualHistory, mentalSymptoms, generalRemarks, doctorObservations, prescription,
-      followUpDate
+      habits, menstrualHistory, mentalSymptoms, generalRemarks, doctorObservations, prescription
     } = req.body;
+
+    // Calculate follow-up date (15 days after date of visit)
+    const followUpDate = new Date(dateOfVisit);
+    followUpDate.setDate(followUpDate.getDate() + 15); // Add 15 days to date of visit
 
     // Create a new case
     const newCase = new Case({
