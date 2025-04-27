@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your App Title</title>
+    <style>
+        #follow-ups-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            margin: 10px 0;
+        }
+
+        #follow-ups-list {
+            margin-top: 20px;
+        }
+
+        #follow-ups-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #follow-ups-list li {
+            padding: 10px;
+            background-color: #f2f2f2;
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
+
+        #loading {
+            font-size: 18px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Follow Up Cases</h1>
+
+    <!-- Button to trigger Follow Ups -->
+    <button id="follow-ups-btn">Follow Ups</button>
+    
+    <!-- Where the Follow Ups will be displayed -->
+    <div id="follow-ups-list"></div>
+
+    <script>
+        document.getElementById("follow-ups-btn").addEventListener("click", async function() {
+            // Show loading message
+            document.getElementById("follow-ups-list").innerHTML = "<p id='loading'>Loading follow-up cases...</p>";
+
+            try {
+                // Make the API call to fetch follow-up cases
+                const response = await fetch("/due-followups");
+
+                // If the response is okay
+                if (response.ok) {
+                    const followups = await response.json();
+                    
+                    // If there are no follow-ups
+                    if (followups.length === 0) {
+                        document.getElementById("follow-ups-list").innerHTML = "<p>No follow-ups today.</p>";
+                    } else {
+                        // Display the list of follow-up cases
+                        let listHtml = "<ul>";
+                        followups.forEach(followup => {
+                            listHtml += `<li>Name: ${followup.name}, Phone: ${followup.phone}, Follow-up Date: ${new Date(followup.followUpDate).toLocaleDateString()}</li>`;
+                        });
+                        listHtml += "</ul>";
+                        document.getElementById("follow-ups-list").innerHTML = listHtml;
+                    }
+                } else {
+                    document.getElementById("follow-ups-list").innerHTML = "<p>Error loading follow-up cases. Please try again.</p>";
+                }
+            } catch (error) {
+                document.getElementById("follow-ups-list").innerHTML = "<p>Error fetching data. Please try again.</p>";
+                console.error("Error fetching follow-ups:", error);
+            }
+        });
+    </script>
+
+</body>
+</html>
