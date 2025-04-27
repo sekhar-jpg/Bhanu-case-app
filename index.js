@@ -65,13 +65,16 @@ app.post('/submit-case', async (req, res) => {
       habits, menstrualHistory, mentalSymptoms, generalRemarks, doctorObservations, prescription
     } = req.body;
 
+    // If dateOfVisit is not provided, set it to the current date
+    const visitDate = dateOfVisit ? new Date(dateOfVisit) : new Date();
+
     // Calculate follow-up date (15 days after date of visit)
-    const followUpDate = new Date(dateOfVisit);
+    const followUpDate = new Date(visitDate);
     followUpDate.setDate(followUpDate.getDate() + 15); // Add 15 days to date of visit
 
     // Create a new case
     const newCase = new Case({
-      name, age, gender, maritalStatus, occupation, address, phone, dateOfVisit,
+      name, age, gender, maritalStatus, occupation, address, phone, dateOfVisit: visitDate,
       chiefComplaints, historyOfPresentIllness, pastHistory, familyHistory, appetite,
       cravingsAversions, thirst, bowelMovement, urine, sleep, dreams, sweat, thermalNature,
       habits, menstrualHistory, mentalSymptoms, generalRemarks, doctorObservations, prescription,
@@ -103,32 +106,6 @@ app.get('/follow-ups', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error loading follow-up cases. Please try again.' });
-  }
-});
-
-// Route for updating follow-up date (15 days after dateOfVisit)
-app.put('/update-follow-up/:id', async (req, res) => {
-  try {
-    const caseId = req.params.id;
-    const caseData = req.body;
-
-    const followUpDate = new Date(caseData.dateOfVisit);
-    followUpDate.setDate(followUpDate.getDate() + 15); // Setting follow-up date to 15 days after visit
-
-    const updatedCase = await Case.findByIdAndUpdate(
-      caseId,
-      { followUpDate: followUpDate },
-      { new: true } // return the updated case
-    );
-
-    if (!updatedCase) {
-      return res.status(404).json({ error: 'Case not found' });
-    }
-
-    res.status(200).json({ message: 'Follow-up date updated successfully', case: updatedCase });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error updating the follow-up date. Please try again.' });
   }
 });
 
