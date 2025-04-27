@@ -1,54 +1,86 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-
 const app = express();
+const port = process.env.PORT || 3000;
 
-// Middleware to parse JSON bodies
-app.use(bodyParser.json());
-
-// Define the Case schema
-const caseSchema = new mongoose.Schema({
-    name: String,
-    phone: String,
-    date: Date,
-    followUpDate: Date
+// MongoDB Connection
+mongoose.connect('your-mongodb-connection-string-here', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
 
+// Define Schema
+const caseSchema = new mongoose.Schema({
+  name: String,
+  age: Number,
+  gender: String,
+  maritalStatus: String,
+  occupation: String,
+  address: String,
+  phone: String,
+  dateOfVisit: Date,
+  chiefComplaints: String,
+  historyOfPresentIllness: String,
+  pastHistory: String,
+  familyHistory: String,
+  appetite: String,
+  cravingsAversions: String,
+  thirst: String,
+  bowelMovement: String,
+  urine: String,
+  sleep: String,
+  dreams: String,
+  sweat: String,
+  thermalNature: String,
+  habits: String,
+  menstrualHistory: String,
+  mentalSymptoms: String,
+  generalRemarks: String,
+  date: { type: Date, default: Date.now },
+  followUpDate: { type: Date },
+});
+
+// Create Model
 const Case = mongoose.model('Case', caseSchema);
 
-// Connect to MongoDB (Replace with your actual MongoDB URI)
-mongoose.connect('mongodb+srv://bhanuhomeopathy:sekhar123456@cluster0.wm2pxqs.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('MongoDB connected'))
-    .catch(err => console.log('MongoDB connection error:', err));
+// Middleware
+app.use(bodyParser.json());
 
-// Handle form submission (POST request to /submit-case)
+// Routes
 app.post('/submit-case', async (req, res) => {
-    const { name, phone, date, followUpDate } = req.body;
-
-    // Check if all required fields are present
-    if (!name || !phone || !date || !followUpDate) {
-        return res.status(400).json({ success: false, message: 'All fields are required' });
-    }
-
-    // Create a new Case document
-    const newCase = new Case({
-        name,
-        phone,
-        date: new Date(date),
-        followUpDate: new Date(followUpDate)
-    });
-
-    try {
-        // Save the new case to the database
-        await newCase.save();
-        res.json({ success: true, message: 'Case submitted successfully' });
-    } catch (err) {
-        console.log('Error saving case:', err);
-        res.status(500).json({ success: false, message: 'Error saving case' });
-    }
+  try {
+    const caseData = req.body;
+    const newCase = new Case(caseData);
+    await newCase.save();
+    res.status(200).send('Case submitted successfully');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error submitting case');
+  }
 });
 
-// Start the server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// New Route to get Today's Due Follow-ups
+app.get('/due-followups', async (req, res) => {
+  try {
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0); // 00:00 UTC
+
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+
+    const duePatients = await Case.find({
+      followUpDate: { $gte: today, $lt: tomorrow }
+    });
+
+    res.status(200).json(duePatients);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching due follow-ups');
+  }
+});
+
+// Start Server
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
