@@ -2,86 +2,102 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Follow-up Cases</title>
+
   <style>
+    /* Table Styling */
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
-      background-color: #f5f5f5;
-    }
-    h1 {
-      text-align: center;
-      color: #333;
+      background-color: #f9f9f9;
     }
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
       background-color: white;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     th, td {
       padding: 12px;
-      border: 1px solid #ddd;
+      border: 1px solid #ccc;
       text-align: center;
     }
     th {
-      background-color: #4CAF50;
+      background-color: #007bff;
       color: white;
     }
-    tr:hover {
-      background-color: #f1f1f1;
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .header img {
+      width: 150px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+    .back-button {
+      display: inline-block;
+      margin-top: 30px;
+      text-decoration: none;
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 16px;
     }
   </style>
 </head>
 <body>
 
-<h1>Follow-up Cases</h1>
+  <div class="header">
+    <img src="https://via.placeholder.com/150x50?text=Bhanu+Clinic" alt="Clinic Logo">
+    <h1>Follow-up Cases</h1>
+  </div>
 
-<table id="followupsTable">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Phone</th>
-      <th>Follow-up Date</th>
-    </tr>
-  </thead>
-  <tbody>
-    <!-- Data will be inserted here dynamically -->
-  </tbody>
-</table>
+  <table id="followup-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Follow-up Date</th>
+      </tr>
+    </thead>
+    <tbody id="followup-body">
+      <!-- Data will be loaded here -->
+    </tbody>
+  </table>
 
-<script>
-  // Fetch follow-up cases from server
-  fetch('/follow-ups')
-    .then(response => response.json())
-    .then(data => {
-      const tableBody = document.getElementById('followupsTable').querySelector('tbody');
+  <div style="text-align: center;">
+    <a class="back-button" href="/">🏠 Back to Home</a>
+  </div>
 
-      data.forEach(caseData => {
-        const row = document.createElement('tr');
+  <script>
+    async function loadFollowups() {
+      try {
+        const response = await fetch('/follow-ups');
+        const data = await response.json();
+        const tbody = document.getElementById('followup-body');
+        tbody.innerHTML = '';
 
-        const nameCell = document.createElement('td');
-        nameCell.textContent = caseData.name;
-        row.appendChild(nameCell);
+        data.forEach(caseItem => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${caseItem.name}</td>
+            <td>${caseItem.phone}</td>
+            <td>${new Date(caseItem.followUpDate).toLocaleDateString('en-GB')}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      } catch (error) {
+        console.error('Error loading follow-ups:', error);
+      }
+    }
 
-        const phoneCell = document.createElement('td');
-        phoneCell.textContent = caseData.phone;
-        row.appendChild(phoneCell);
-
-        const followUpDateCell = document.createElement('td');
-        const formattedDate = new Date(caseData.followUpDate).toLocaleDateString();
-        followUpDateCell.textContent = formattedDate;
-        row.appendChild(followUpDateCell);
-
-        tableBody.appendChild(row);
-      });
-    })
-    .catch(error => {
-      console.error('Error fetching follow-up cases:', error);
-    });
-</script>
+    loadFollowups();
+  </script>
 
 </body>
 </html>
