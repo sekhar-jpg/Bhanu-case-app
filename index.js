@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const path = require('path'); // NEW: To handle path
+const path = require('path');
 
 // Initialize express app
 const app = express();
@@ -9,8 +9,8 @@ const app = express();
 // Middleware to parse JSON data
 app.use(bodyParser.json());
 
-// Serve static files from 'public' folder
-app.use(express.static('public')); // 🛠 Important Line
+// Serve static files from the "public" directory
+app.use(express.static(path.join(__dirname, 'public')));
 
 // MongoDB Connection
 mongoose.connect('mongodb+srv://bhanuhomeopathy:sekhar123456@cluster0.wm2pxqs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
@@ -66,6 +66,7 @@ app.post('/submit-case', async (req, res) => {
       followUpDate
     } = req.body;
 
+    // Create a new case
     const newCase = new Case({
       name, age, gender, maritalStatus, occupation, address, phone, dateOfVisit,
       chiefComplaints, historyOfPresentIllness, pastHistory, familyHistory, appetite,
@@ -74,6 +75,7 @@ app.post('/submit-case', async (req, res) => {
       followUpDate
     });
 
+    // Save the new case to the database
     await newCase.save();
     res.status(201).json({ message: 'Case submitted successfully', case: newCase });
   } catch (error) {
@@ -87,7 +89,7 @@ app.get('/follow-ups', async (req, res) => {
   try {
     const today = new Date();
     const followUps = await Case.find({
-      followUpDate: { $gte: today }
+      followUpDate: { $gte: today } // cases where follow-up date is today or later
     });
 
     if (followUps.length > 0) {
@@ -101,19 +103,19 @@ app.get('/follow-ups', async (req, res) => {
   }
 });
 
-// Route for updating follow-up date
+// Route for updating follow-up date (15 days after dateOfVisit)
 app.put('/update-follow-up/:id', async (req, res) => {
   try {
     const caseId = req.params.id;
     const caseData = req.body;
 
     const followUpDate = new Date(caseData.dateOfVisit);
-    followUpDate.setDate(followUpDate.getDate() + 15);
+    followUpDate.setDate(followUpDate.getDate() + 15); // Setting follow-up date to 15 days after visit
 
     const updatedCase = await Case.findByIdAndUpdate(
       caseId,
       { followUpDate: followUpDate },
-      { new: true }
+      { new: true } // return the updated case
     );
 
     if (!updatedCase) {
@@ -127,8 +129,13 @@ app.put('/update-follow-up/:id', async (req, res) => {
   }
 });
 
+// Home Route to Serve index.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 // Start the server
-const PORT = process.env.PORT || 10000; // use port 10000 as you already did
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
