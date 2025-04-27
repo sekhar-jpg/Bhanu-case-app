@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Follow-up Cases - Bhanu Homeopathy</title>
+  <title>Follow Ups - Bhanu Homeopathy</title>
   <style>
     body {
       font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
       margin: 0;
       padding: 0;
-      background-color: #f2f2f2;
     }
     header {
       background-color: #ffffff;
@@ -33,7 +33,7 @@
       margin: 20px auto;
       background-color: #ffffff;
       padding: 20px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
       border-radius: 8px;
     }
     table {
@@ -42,26 +42,26 @@
       margin-top: 20px;
     }
     th, td {
-      padding: 12px;
       text-align: left;
+      padding: 12px;
       border-bottom: 1px solid #ddd;
     }
-    tr:nth-child(even) {
-      background-color: #f9f9f9;
+    th {
+      background-color: #4CAF50;
+      color: white;
     }
     tr:hover {
       background-color: #f1f1f1;
     }
-    .back-button {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 12px 20px;
+    .call-button {
       background-color: #4CAF50;
       color: white;
+      padding: 6px 12px;
       text-decoration: none;
-      border-radius: 5px;
+      border-radius: 4px;
+      font-size: 14px;
     }
-    .back-button:hover {
+    .call-button:hover {
       background-color: #45a049;
     }
     @media (max-width: 600px) {
@@ -72,8 +72,8 @@
         margin: 10px;
         padding: 10px;
       }
-      table th, table td {
-        padding: 8px;
+      table, th, td {
+        font-size: 14px;
       }
     }
   </style>
@@ -84,57 +84,59 @@
   <img src="/bhanu-homeopathy-logo.png" alt="Bhanu Homeopathy Logo">
 </header>
 
-<h1>Follow-up Cases</h1>
+<h1>Follow Ups - Bhanu Homeopathy</h1>
 
 <div class="container">
   <table id="followupsTable">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Phone</th>
+        <th>Patient Name</th>
+        <th>Phone Number</th>
+        <th>Chief Complaints</th>
+        <th>Date of Visit</th>
         <th>Follow-up Date</th>
       </tr>
     </thead>
     <tbody>
-      <!-- Data will be populated here -->
+      <!-- Data will be dynamically inserted here -->
     </tbody>
   </table>
-
-  <a href="index.html" class="back-button">🏠 Back to Home</a>
 </div>
 
 <script>
-  async function loadFollowUps() {
+  async function fetchFollowups() {
     try {
-      const response = await fetch('/follow-ups');
+      const response = await fetch('/followups');
       const data = await response.json();
-
-      const tableBody = document.querySelector('#followupsTable tbody');
+      const tableBody = document.getElementById('followupsTable').querySelector('tbody');
       tableBody.innerHTML = '';
 
-      if (Array.isArray(data)) {
-        data.forEach(followUp => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${followUp.name}</td>
-            <td>${followUp.phone}</td>
-            <td>${new Date(followUp.followUpDate).toLocaleDateString()}</td>
-          `;
-          tableBody.appendChild(row);
-        });
-      } else {
+      if (data.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No follow-ups due today.</td></tr>';
+        return;
+      }
+
+      data.forEach(caseItem => {
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td colspan="3" style="text-align:center;">No follow-up cases found</td>
+          <td>${caseItem.name}</td>
+          <td>
+            ${caseItem.phone}<br>
+            <a class="call-button" href="tel:${caseItem.phone}">📞 Call</a>
+          </td>
+          <td>${caseItem.chiefComplaints || ''}</td>
+          <td>${new Date(caseItem.dateOfVisit).toLocaleDateString()}</td>
+          <td>${new Date(caseItem.followUpDate).toLocaleDateString()}</td>
         `;
         tableBody.appendChild(row);
-      }
+      });
+
     } catch (error) {
-      console.error('Error fetching follow-up cases:', error);
+      console.error('Error fetching followups:', error);
     }
   }
 
-  loadFollowUps();
+  fetchFollowups();
 </script>
 
 </body>
