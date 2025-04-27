@@ -1,159 +1,104 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Bhanu Homeopathy Case Submission</title>
-
-  <!-- Mobile optimization code ready ga istanu -->
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f2f2f2;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background-color: #ffffff;
-      padding: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    header img {
-      width: 150px;
-      height: auto;
-    }
-    h1 {
-      text-align: center;
-      margin-top: 20px;
-      color: #333333;
-    }
-    .container {
-      max-width: 900px;
-      margin: 20px auto;
-      background-color: #ffffff;
-      padding: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      border-radius: 8px;
-    }
-    form {
-      display: flex;
-      flex-direction: column;
-    }
-    label {
-      margin-top: 10px;
-      font-weight: bold;
-    }
-    input, textarea, select {
-      padding: 10px;
-      margin-top: 5px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      width: 100%;
-    }
-    button {
-      margin-top: 20px;
-      padding: 12px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-    @media (max-width: 600px) {
-      header img {
-        width: 120px;
-      }
-      .container {
-        margin: 10px;
-        padding: 10px;
-      }
-      h1 {
-        font-size: 22px;
-      }
-      input, textarea, select {
-        font-size: 16px;
-      }
-      button {
-        font-size: 18px;
-        padding: 14px;
-      }
-    }
-  </style>
+  <title>Case Submission Form</title>
+  <link rel="stylesheet" href="styles.css"> <!-- Optional, for styling -->
 </head>
 <body>
-  <header>
-    <img src="your-logo.png" alt="Bhanu Homeopathy Logo">
-  </header>
+  <h1>Submit Patient Case</h1>
+  <form id="caseForm">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required><br>
 
-  <h1>Submit Case to Bhanu Homeopathy</h1>
+    <label for="age">Age:</label>
+    <input type="number" id="age" name="age" required><br>
 
-  <div class="container">
-    <form id="caseForm">
-      <label for="name">Name:</label>
-      <input type="text" id="name" name="name" required>
+    <label for="gender">Gender:</label>
+    <select id="gender" name="gender" required>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+    </select><br>
 
-      <label for="age">Age:</label>
-      <input type="number" id="age" name="age" required>
+    <label for="maritalStatus">Marital Status:</label>
+    <input type="text" id="maritalStatus" name="maritalStatus" required><br>
 
-      <label for="gender">Gender:</label>
-      <select id="gender" name="gender" required>
-        <option value="male">Male</option>
-        <option value="female">Female</option>
-        <option value="other">Other</option>
-      </select>
+    <label for="occupation">Occupation:</label>
+    <input type="text" id="occupation" name="occupation" required><br>
 
-      <label for="address">Address:</label>
-      <input type="text" id="address" name="address" required>
+    <label for="address">Address:</label>
+    <input type="text" id="address" name="address" required><br>
 
-      <label for="phone">Phone:</label>
-      <input type="tel" id="phone" name="phone" required>
+    <label for="phone">Phone:</label>
+    <input type="tel" id="phone" name="phone" required><br>
 
-      <label for="chiefComplaints">Chief Complaints:</label>
-      <textarea id="chiefComplaints" name="chiefComplaints" required></textarea>
+    <label for="dateOfVisit">Date of Visit:</label>
+    <input type="date" id="dateOfVisit" name="dateOfVisit" required><br>
 
-      <label for="followUpDate">Follow-Up Date:</label>
-      <input type="date" id="followUpDate" name="followUpDate" required>
+    <label for="chiefComplaints">Chief Complaints:</label>
+    <textarea id="chiefComplaints" name="chiefComplaints" required></textarea><br>
 
-      <button type="submit">Submit Case</button>
-    </form>
-  </div>
+    <label for="historyOfPresentIllness">History of Present Illness:</label>
+    <textarea id="historyOfPresentIllness" name="historyOfPresentIllness" required></textarea><br>
 
-  <script>
-    document.getElementById('caseForm').addEventListener('submit', function(event) {
-      event.preventDefault();
+    <label for="pastHistory">Past History:</label>
+    <textarea id="pastHistory" name="pastHistory"></textarea><br>
 
-      const formData = new FormData(event.target);
-      const data = {};
+    <label for="familyHistory">Family History:</label>
+    <textarea id="familyHistory" name="familyHistory"></textarea><br>
 
-      formData.forEach((value, key) => {
-        data[key] = value;
-      });
+    <label for="appetite">Appetite:</label>
+    <input type="text" id="appetite" name="appetite" required><br>
 
-      fetch('/submit-case', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      })
-      .then(response => response.json())
-      .then(result => {
-        alert('Case submitted successfully');
-        event.target.reset();  // Reset the form after successful submission
-      })
-      .catch(error => {
-        alert('Error submitting the case. Please try again.');
-        console.error('Error:', error);
-      });
-    });
-  </script>
+    <label for="cravingsAversions">Cravings/Aversions:</label>
+    <input type="text" id="cravingsAversions" name="cravingsAversions"><br>
+
+    <label for="thirst">Thirst:</label>
+    <input type="text" id="thirst" name="thirst"><br>
+
+    <label for="bowelMovement">Bowel Movement:</label>
+    <input type="text" id="bowelMovement" name="bowelMovement"><br>
+
+    <label for="urine">Urine:</label>
+    <input type="text" id="urine" name="urine"><br>
+
+    <label for="sleep">Sleep:</label>
+    <input type="text" id="sleep" name="sleep"><br>
+
+    <label for="dreams">Dreams:</label>
+    <input type="text" id="dreams" name="dreams"><br>
+
+    <label for="sweat">Sweat:</label>
+    <input type="text" id="sweat" name="sweat"><br>
+
+    <label for="thermalNature">Thermal Nature:</label>
+    <input type="text" id="thermalNature" name="thermalNature"><br>
+
+    <label for="habits">Habits (Tea, Coffee, Smoking, etc.):</label>
+    <input type="text" id="habits" name="habits"><br>
+
+    <label for="menstrualHistory">Menstrual History:</label>
+    <input type="text" id="menstrualHistory" name="menstrualHistory"><br>
+
+    <label for="mentalSymptoms">Mental Symptoms:</label>
+    <textarea id="mentalSymptoms" name="mentalSymptoms"></textarea><br>
+
+    <label for="generalRemarks">General Remarks:</label>
+    <textarea id="generalRemarks" name="generalRemarks"></textarea><br>
+
+    <label for="doctorObservations">Doctor Observations:</label>
+    <textarea id="doctorObservations" name="doctorObservations"></textarea><br>
+
+    <label for="prescription">Prescription:</label>
+    <textarea id="prescription" name="prescription"></textarea><br>
+
+    <label for="followUpDate">Follow-Up Date:</label>
+    <input type="date" id="followUpDate" name="followUpDate" required><br>
+
+    <button type="submit">Submit Case</button>
+  </form>
+
+  <script src="script.js"></script> <!-- Optional, for handling form submission -->
 </body>
 </html>
