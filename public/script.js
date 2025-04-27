@@ -1,36 +1,42 @@
-document.getElementById('caseForm').addEventListener('submit', async function(e) {
-  e.preventDefault(); // Prevents the default form submission
+document.getElementById("submitCaseForm").addEventListener("submit", function(event) {
+  event.preventDefault();
 
-  // Create an object to hold form data
+  // Collect form data
   const formData = new FormData(this);
-  const caseData = {};
 
-  // Loop through each form field and collect data
-  formData.forEach((value, key) => {
-    caseData[key] = value;
-  });
-
-  try {
-    // Send the form data to the backend via POST request
-    const response = await fetch('/submit-case', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(caseData) // Convert form data to JSON
-    });
-
-    const result = await response.json();
-
-    // Handle the response
-    if (response.status === 201) {
-      alert('Case submitted successfully');
-      console.log(result); // Optionally log the result for debugging
-    } else {
-      alert('Error: ' + result.error);
+  // Submit the case data to the backend
+  fetch('/submit-case', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.message === 'Case submitted successfully') {
+      // After submission, display case data
+      displayCaseDetails(data.case);
     }
-  } catch (error) {
-    alert('Error submitting case');
-    console.error(error);
-  }
+  })
+  .catch(error => console.error('Error:', error));
 });
+
+function displayCaseDetails(caseData) {
+  // Get the case details div
+  const caseDetailsDiv = document.getElementById("case-details");
+
+  // Populate the case details
+  caseDetailsDiv.innerHTML = `
+    <h2>Case Details</h2>
+    <ul>
+      <li><strong>Name:</strong> ${caseData.name}</li>
+      <li><strong>Age:</strong> ${caseData.age}</li>
+      <li><strong>Gender:</strong> ${caseData.gender}</li>
+      <li><strong>Marital Status:</strong> ${caseData.maritalStatus}</li>
+      <li><strong>Occupation:</strong> ${caseData.occupation}</li>
+      <li><strong>Address:</strong> ${caseData.address}</li>
+      <li><strong>Phone:</strong> ${caseData.phone}</li>
+      <li><strong>Date of Visit:</strong> ${caseData.dateOfVisit}</li>
+      <li><strong>Chief Complaints:</strong> ${caseData.chiefComplaints}</li>
+      <li><strong>Follow-Up Date:</strong> ${caseData.followUpDate}</li>
+    </ul>
+  `;
+}
