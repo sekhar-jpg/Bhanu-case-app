@@ -5,7 +5,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // MongoDB Connection
-mongoose.connect('your-mongodb-connection-string-here', {
+mongoose.connect('mongodb+srv://bhanuhomeopathy:sekhar123456@cluster0.wm2pxqs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -48,6 +48,8 @@ const Case = mongoose.model('Case', caseSchema);
 app.use(bodyParser.json());
 
 // Routes
+
+// 1. Submit Case
 app.post('/submit-case', async (req, res) => {
   try {
     const caseData = req.body;
@@ -60,11 +62,11 @@ app.post('/submit-case', async (req, res) => {
   }
 });
 
-// New Route to get Today's Due Follow-ups
+// 2. Get Today's Due Follow-ups
 app.get('/due-followups', async (req, res) => {
   try {
     const today = new Date();
-    today.setUTCHours(0, 0, 0, 0); // 00:00 UTC
+    today.setUTCHours(0, 0, 0, 0);
 
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
