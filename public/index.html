@@ -3,12 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Case Submission Form</title>
-  <link rel="stylesheet" href="styles.css"> <!-- Optional, for styling -->
+  <title>Case Submission</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Submit Patient Case</h1>
-  <form id="caseForm">
+  <h1>Submit Case</h1>
+
+  <form id="submitCaseForm">
+    <!-- Patient Details Form -->
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" required><br>
 
@@ -37,68 +39,14 @@
     <input type="date" id="dateOfVisit" name="dateOfVisit" required><br>
 
     <label for="chiefComplaints">Chief Complaints:</label>
-    <textarea id="chiefComplaints" name="chiefComplaints" required></textarea><br>
-
-    <label for="historyOfPresentIllness">History of Present Illness:</label>
-    <textarea id="historyOfPresentIllness" name="historyOfPresentIllness" required></textarea><br>
-
-    <label for="pastHistory">Past History:</label>
-    <textarea id="pastHistory" name="pastHistory"></textarea><br>
-
-    <label for="familyHistory">Family History:</label>
-    <textarea id="familyHistory" name="familyHistory"></textarea><br>
-
-    <label for="appetite">Appetite:</label>
-    <input type="text" id="appetite" name="appetite" required><br>
-
-    <label for="cravingsAversions">Cravings/Aversions:</label>
-    <input type="text" id="cravingsAversions" name="cravingsAversions"><br>
-
-    <label for="thirst">Thirst:</label>
-    <input type="text" id="thirst" name="thirst"><br>
-
-    <label for="bowelMovement">Bowel Movement:</label>
-    <input type="text" id="bowelMovement" name="bowelMovement"><br>
-
-    <label for="urine">Urine:</label>
-    <input type="text" id="urine" name="urine"><br>
-
-    <label for="sleep">Sleep:</label>
-    <input type="text" id="sleep" name="sleep"><br>
-
-    <label for="dreams">Dreams:</label>
-    <input type="text" id="dreams" name="dreams"><br>
-
-    <label for="sweat">Sweat:</label>
-    <input type="text" id="sweat" name="sweat"><br>
-
-    <label for="thermalNature">Thermal Nature:</label>
-    <input type="text" id="thermalNature" name="thermalNature"><br>
-
-    <label for="habits">Habits (Tea, Coffee, Smoking, etc.):</label>
-    <input type="text" id="habits" name="habits"><br>
-
-    <label for="menstrualHistory">Menstrual History:</label>
-    <input type="text" id="menstrualHistory" name="menstrualHistory"><br>
-
-    <label for="mentalSymptoms">Mental Symptoms:</label>
-    <textarea id="mentalSymptoms" name="mentalSymptoms"></textarea><br>
-
-    <label for="generalRemarks">General Remarks:</label>
-    <textarea id="generalRemarks" name="generalRemarks"></textarea><br>
-
-    <label for="doctorObservations">Doctor Observations:</label>
-    <textarea id="doctorObservations" name="doctorObservations"></textarea><br>
-
-    <label for="prescription">Prescription:</label>
-    <textarea id="prescription" name="prescription"></textarea><br>
-
-    <label for="followUpDate">Follow-Up Date:</label>
-    <input type="date" id="followUpDate" name="followUpDate" required><br>
+    <textarea id="chiefComplaints" name="chiefComplaints"></textarea><br>
 
     <button type="submit">Submit Case</button>
   </form>
 
-  <script src="script.js"></script> <!-- Optional, for handling form submission -->
+  <!-- Case Details Display -->
+  <div id="case-details"></div>
+
+  <script src="script.js"></script>
 </body>
 </html>
