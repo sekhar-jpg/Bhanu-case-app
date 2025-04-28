@@ -36,4 +36,17 @@ router.get('/case/:id', async (req, res) => {
   }
 });
 
+// ⭐ Route to delete a case by ID
+router.delete('/case/:id', async (req, res) => {
+  try {
+    const deletedCase = await Case.findByIdAndDelete(req.params.id);
+    if (!deletedCase) {
+      return res.status(404).json({ message: 'Case not found' });
+    }
+    res.status(200).json({ message: 'Case deleted successfully' });
+  } catch (error) {
+    res.status(400).json({ message: 'Error deleting case', error: error.message });
+  }
+});
+
 module.exports = router;
