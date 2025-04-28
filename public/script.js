@@ -53,3 +53,28 @@ function displayCaseDetails(caseData) {
     </ul>
   `;
 }
+function searchFollowUps() {
+  const searchTerm = document.getElementById('search').value;
+
+  fetch(`/follow-ups?search=${searchTerm}`)
+    .then(response => response.json())
+    .then(followUps => {
+      displayFollowUps(followUps);
+    })
+    .catch(error => console.error('Error fetching follow-ups:', error));
+}
+
+function displayFollowUps(followUps) {
+  const table = document.getElementById('followUpTable');
+  table.innerHTML = '';
+
+  followUps.forEach(caseData => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${caseData.name}</td>
+      <td>${caseData.phone}</td>
+      <td>${new Date(caseData.followUpDate).toLocaleDateString()}</td>
+    `;
+    table.appendChild(row);
+  });
+}
