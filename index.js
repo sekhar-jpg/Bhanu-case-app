@@ -1,26 +1,28 @@
+require('dotenv').config();  // <-- Add this at the top to use .env file
+
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const caseRoutes = require('./caseRoutes');  // Import case routes
+const caseRoutes = require('./routes/caseRoutes');  // <-- Correct path, move caseRoutes.js into 'routes' folder if not done
 
 const app = express();
 const port = process.env.PORT || 5000;
 
 // Middleware
-app.use(bodyParser.json());  // Parse incoming JSON data
+app.use(bodyParser.json());
 
-// Use the routes for handling cases
-app.use('/api', caseRoutes);  // Prefix routes with /api
+// Routes
+app.use('/api', caseRoutes);
 
 // MongoDB connection
-mongoose.connect('mongodb+srv://bhanuhomeopathy:sekhar123456@cluster0.wm2pxqs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
+mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-  .then(() => console.log('MongoDB connected successfully'))
-  .catch((err) => console.error('MongoDB connection error:', err));
+.then(() => console.log('MongoDB connected successfully'))
+.catch((err) => console.error('MongoDB connection error:', err));
 
-// Start the server
+// Start server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
