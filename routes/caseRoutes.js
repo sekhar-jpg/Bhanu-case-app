@@ -1,15 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const Case = require('../models/Case');
+const caseController = require('../controllers/caseController');
 
-router.post('/', async (req, res) => {
-  try {
-    const newCase = new Case(req.body);
-    await newCase.save();
-    res.status(201).json({ message: 'Case submitted successfully' });
-  } catch (error) {
-    res.status(500).json({ error: 'Error submitting case' });
-  }
-});
+router.post('/', caseController.createCase);
+router.get('/', caseController.getCases);
 
 module.exports = router;
