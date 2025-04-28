@@ -1,11 +1,8 @@
-const Case = require('../models/caseModel'); // Ensure correct path
+const Case = require('../models/caseModel'); // Ensure correct path to your case model
 
 // Controller to create a new case
 exports.createCase = async (req, res) => {
   try {
-    // Log the request body for debugging
-    console.log('Request Body:', req.body);
-
     // Validate that required fields are present in the request body
     if (
       !req.body.name ||
