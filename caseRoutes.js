@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Case = require('./models/Case'); // Updated to match the correct file name
+const Case = require('../models/Case'); // Corrected path to model
 
 // Route to add a new case
 router.post('/add-case', async (req, res) => {
