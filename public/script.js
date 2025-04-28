@@ -78,3 +78,21 @@ function displayFollowUps(followUps) {
     table.appendChild(row);
   });
 }
+function displayFollowUps(followUps) {
+  const tableBody = document.getElementById('followUpTable').getElementsByTagName('tbody')[0];
+  tableBody.innerHTML = '';
+
+  followUps.forEach(caseData => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${caseData.name}</td>
+      <td>${caseData.phone}</td>
+      <td>${new Date(caseData.followUpDate).toLocaleDateString()}</td>
+      <td>
+        <button onclick="editCase('${caseData._id}')">Edit</button>
+        <button onclick="deleteCase('${caseData._id}')">Delete</button>
+      </td>
+    `;
+    tableBody.appendChild(row);
+  });
+}
