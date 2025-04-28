@@ -62,3 +62,12 @@ app.get('/cases/:id', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch case' });
   }
 });
+// Update case by ID
+app.put('/cases/:id', async (req, res) => {
+  try {
+    const updatedCase = await Case.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json({ message: 'Case updated successfully', case: updatedCase });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update case' });
+  }
+});
