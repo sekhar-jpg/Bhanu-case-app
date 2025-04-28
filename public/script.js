@@ -139,3 +139,38 @@ function editCase(caseId) {
     })
     .catch(error => console.error('Error fetching case for edit:', error));
 }
+document.getElementById("submitCaseForm").addEventListener("submit", function(event) {
+  event.preventDefault();
+  
+  const formData = new FormData(this);
+  const caseData = {};
+  formData.forEach((value, key) => {
+    caseData[key] = value;
+  });
+
+  let method = 'POST';
+  let url = '/submit-case';
+
+  if (caseData.caseId) {
+    method = 'PUT';
+    url = `/cases/${caseData.caseId}`;
+  }
+
+  fetch(url, {
+    method: method,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(caseData),
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.message === 'Case submitted successfully' || data.message === 'Case updated successfully') {
+      displayCaseDetails(data.case);
+      // Clear hidden caseId field after update
+      const hiddenIdField = document.getElementById('caseId');
+      if (hiddenIdField) hiddenIdField.remove();
+    }
+  })
+  .catch(error => console.error('Error:', error));
+});
