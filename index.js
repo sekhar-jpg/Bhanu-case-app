@@ -3,7 +3,7 @@ require('dotenv').config(); // To load .env file
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const submitCaseRoutes = require('./routes/submitCaseRoutes'); // updated name
+const submitCaseRoutes = require('./routes/CaseRoutes'); // updated name
 
 const app = express();
 const port = process.env.PORT || 5000;
