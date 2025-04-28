@@ -10,12 +10,10 @@
     <h1>Submit Patient Case</h1>
 
     <form id="caseForm">
-        <!-- Other input fields remain unchanged -->
+        <!-- Form fields remain unchanged -->
 
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" required><br><br>
-
-        <!-- ... All other form fields ... -->
 
         <label for="dateOfVisit">Date of Visit:</label>
         <input type="date" id="dateOfVisit" name="dateOfVisit" required><br><br>
@@ -29,7 +27,7 @@
 
     <script>
         document.getElementById('caseForm').addEventListener('submit', async function(event) {
-            event.preventDefault(); // Prevent form submission to handle the data via JavaScript
+            event.preventDefault();
 
             const dateOfVisit = document.getElementById('dateOfVisit').value;
             if (!dateOfVisit) {
@@ -37,12 +35,10 @@
                 return;
             }
 
-            // Calculate the follow-up date (15 days after the date of visit)
             const visitDate = new Date(dateOfVisit);
             const followUpDate = new Date(visitDate);
-            followUpDate.setDate(followUpDate.getDate() + 15); // Add 15 days
+            followUpDate.setDate(followUpDate.getDate() + 15); 
 
-            // Prepare the data to send in the POST request
             const formData = {
                 name: document.getElementById('name').value,
                 age: document.getElementById('age').value,
@@ -71,10 +67,9 @@
                 generalRemarks: document.getElementById('generalRemarks').value,
                 doctorObservations: document.getElementById('doctorObservations').value,
                 prescription: document.getElementById('prescription').value,
-                followUpDate: followUpDate // Send follow-up date
+                followUpDate: followUpDate
             };
 
-            // Send data to the backend via POST request
             try {
                 const response = await fetch('/submit-case', {
                     method: 'POST',
@@ -86,7 +81,6 @@
 
                 const result = await response.json();
                 if (response.ok) {
-                    // Show success message
                     document.getElementById('successMessage').style.display = 'block';
                 } else {
                     alert(result.error || 'An error occurred');
@@ -96,6 +90,5 @@
             }
         });
     </script>
-
 </body>
 </html>
