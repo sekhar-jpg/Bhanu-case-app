@@ -12,7 +12,7 @@ const port = process.env.PORT || 5000;
 app.use(bodyParser.json());
 
 // Routes
-app.use('/api', submitCaseRoutes);
+app.use('/api', caseRoutes); // Use caseRoutes instead of submitCaseRoutes
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI, {
