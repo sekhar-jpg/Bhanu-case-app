@@ -53,3 +53,12 @@ app.delete('/cases/:id', async (req, res) => {
     res.status(500).json({ error: 'Failed to delete case' });
   }
 });
+// Get single case by ID
+app.get('/cases/:id', async (req, res) => {
+  try {
+    const caseData = await Case.findById(req.params.id);
+    res.json(caseData);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch case' });
+  }
+});
