@@ -174,3 +174,29 @@ document.getElementById("submitCaseForm").addEventListener("submit", function(ev
   })
   .catch(error => console.error('Error:', error));
 });
+function getTodayFollowUps() {
+  fetch('/today-followups')
+    .then(response => response.json())
+    .then(todayCases => {
+      const table = document.getElementById('todayFollowUpTable');
+      const tbody = table.getElementsByTagName('tbody')[0];
+      tbody.innerHTML = '';
+
+      if (todayCases.length > 0) {
+        todayCases.forEach(caseData => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${caseData.name}</td>
+            <td>${caseData.phone}</td>
+            <td>${new Date(caseData.followUpDate).toLocaleDateString()}</td>
+          `;
+          tbody.appendChild(row);
+        });
+        table.style.display = 'table'; // Show table
+      } else {
+        alert('No follow-ups for today.');
+        table.style.display = 'none'; // Hide table
+      }
+    })
+    .catch(error => console.error('Error fetching today\'s follow-ups:', error));
+}
