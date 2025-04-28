@@ -27,11 +27,9 @@ exports.createCase = async (req, res) => {
     // Return the newly created case
     res.status(201).json(newCase);
   } catch (error) {
-    // Check if the error is a validation error
     if (error.name === 'ValidationError') {
       return res.status(400).json({ message: error.message });
     }
-    // Return a general error message
     res.status(500).json({ message: error.message });
   }
 };
@@ -39,25 +37,21 @@ exports.createCase = async (req, res) => {
 // Controller to get all cases
 exports.getCases = async (req, res) => {
   try {
-    // Retrieve all cases from the database
     const cases = await Case.find();
-
-    // Return the list of cases
     res.status(200).json(cases);
   } catch (error) {
-    // Return a general error message
     res.status(500).json({ message: error.message });
   }
 };
 
-// ⭐ Controller to get today's follow-up cases
+// Controller to get today's follow-up cases
 exports.getTodayFollowUps = async (req, res) => {
   try {
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Start of today
+    today.setHours(0, 0, 0, 0);
 
     const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1); // Start of tomorrow
+    tomorrow.setDate(tomorrow.getDate() + 1);
 
     const followUps = await Case.find({
       followUpDate: {
@@ -67,6 +61,22 @@ exports.getTodayFollowUps = async (req, res) => {
     });
 
     res.status(200).json(followUps);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// ⭐ Controller to delete a case
+exports.deleteCase = async (req, res) => {
+  try {
+    const caseId = req.params.id;
+    const deletedCase = await Case.findByIdAndDelete(caseId);
+
+    if (!deletedCase) {
+      return res.status(404).json({ message: 'Case not found' });
+    }
+
+    res.status(200).json({ message: 'Case deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
