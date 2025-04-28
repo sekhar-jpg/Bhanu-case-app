@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const caseRoutes = require('./routes/caseRoutes'); // Corrected path for caseRoutes
 
 const app = express();
-const port = process.env.PORT || 5000; // Dynamically use the Render-provided port
+const port = process.env.PORT || 5000;  // This is fine. Render will use process.env.PORT
 
 // Middleware
 app.use(bodyParser.json());
