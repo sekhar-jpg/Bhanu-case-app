@@ -96,3 +96,46 @@ function displayFollowUps(followUps) {
     tableBody.appendChild(row);
   });
 }
+function deleteCase(caseId) {
+  if (confirm('Are you sure you want to delete this case?')) {
+    fetch(`/cases/${caseId}`, {
+      method: 'DELETE',
+    })
+    .then(response => response.json())
+    .then(data => {
+      alert(data.message);
+      searchFollowUps(); // Refresh table after deletion
+    })
+    .catch(error => console.error('Error deleting case:', error));
+  }
+}
+
+function editCase(caseId) {
+  // Fetch case details and prefill the form
+  fetch(`/cases/${caseId}`)
+    .then(response => response.json())
+    .then(caseData => {
+      document.getElementById('name').value = caseData.name;
+      document.getElementById('age').value = caseData.age;
+      document.getElementById('gender').value = caseData.gender;
+      document.getElementById('maritalStatus').value = caseData.maritalStatus;
+      document.getElementById('occupation').value = caseData.occupation;
+      document.getElementById('address').value = caseData.address;
+      document.getElementById('phone').value = caseData.phone;
+      document.getElementById('dateOfVisit').value = new Date(caseData.dateOfVisit).toISOString().split('T')[0];
+      document.getElementById('chiefComplaints').value = caseData.chiefComplaints;
+      document.getElementById('followUpDate').value = new Date(caseData.followUpDate).toISOString().split('T')[0];
+
+      // Add hidden input for editing existing case
+      let hiddenIdField = document.getElementById('caseId');
+      if (!hiddenIdField) {
+        hiddenIdField = document.createElement('input');
+        hiddenIdField.type = 'hidden';
+        hiddenIdField.id = 'caseId';
+        hiddenIdField.name = 'caseId';
+        document.getElementById('submitCaseForm').appendChild(hiddenIdField);
+      }
+      hiddenIdField.value = caseId;
+    })
+    .catch(error => console.error('Error fetching case for edit:', error));
+}
