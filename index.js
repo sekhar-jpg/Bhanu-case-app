@@ -71,3 +71,23 @@ app.put('/cases/:id', async (req, res) => {
     res.status(500).json({ error: 'Failed to update case' });
   }
 });
+// Get today's follow-up cases
+app.get('/today-followups', async (req, res) => {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Start of today
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1); // Start of tomorrow
+
+    const cases = await Case.find({
+      followUpDate: {
+        $gte: today,
+        $lt: tomorrow
+      }
+    });
+
+    res.json(cases);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch today\'s follow-ups' });
+  }
+});
