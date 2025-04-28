@@ -1,4 +1,5 @@
-const Case = require('../models/Case');  // Ensure correct path
+// caseController.js
+const Case = require('../models/caseModel');  // Ensure correct path
 
 // Controller to create a new case
 exports.createCase = async (req, res) => {
