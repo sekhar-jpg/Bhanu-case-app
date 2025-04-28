@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Case = require('./models/caseModel'); // Import your case model
+const Case = require('./models/Case'); // Updated to match the correct file name
 
 // Route to add a new case
 router.post('/add-case', async (req, res) => {
