@@ -3,7 +3,7 @@ require('dotenv').config(); // To load .env file
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const caseRoutes = require('./routes/caseRoutes'); // updated name
+const caseRoutes = require('./routes/caseRoutes'); // Updated name for caseRoutes
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -12,7 +12,7 @@ const port = process.env.PORT || 5000;
 app.use(bodyParser.json());
 
 // Routes
-app.use('/api', caseRoutes); // Use caseRoutes instead of submitCaseRoutes
+app.use('/api', caseRoutes); // Correct route name
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI, {
