@@ -1,25 +1,26 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const connectDB = require('./config/db');
-const caseRoutes = require('./routes/caseRoutes');
-require('dotenv').config();
+const caseRoutes = require('./caseRoutes');  // Import case routes
 
 const app = express();
-const PORT = process.env.PORT || 5000;
-
-// Connect to DB
-connectDB();
+const port = process.env.PORT || 5000;
 
 // Middleware
-app.use(bodyParser.json());
+app.use(bodyParser.json());  // Parse incoming JSON data
 
-// Routes
-app.use('/api/cases', caseRoutes);
+// Use the routes for handling cases
+app.use('/api', caseRoutes);  // Prefix routes with /api
 
-app.get('/', (req, res) => {
-    res.send('API Running...');
-});
+// MongoDB connection
+mongoose.connect('mongodb+srv://bhanuhomeopathy:sekhar123456@cluster0.wm2pxqs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => console.log('MongoDB connected successfully'))
+  .catch((err) => console.error('MongoDB connection error:', err));
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+// Start the server
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
