@@ -8,17 +8,17 @@ const caseSchema = new mongoose.Schema({
     age: { 
         type: Number, 
         required: true,
-        min: [0, 'Age must be a positive number']  // Ensure age is a positive number
+        min: [0, 'Age must be a positive number']
     },
     gender: { 
         type: String, 
         required: true,
-        enum: ['Male', 'Female', 'Other']  // Only allow certain values for gender
+        enum: ['Male', 'Female', 'Other']
     },
     maritalStatus: { 
         type: String, 
         required: true,
-        enum: ['Single', 'Married', 'Divorced', 'Widowed']  // Add marital status options
+        enum: ['Single', 'Married', 'Divorced', 'Widowed']
     },
     occupation: { 
         type: String, 
@@ -31,7 +31,7 @@ const caseSchema = new mongoose.Schema({
     phone: { 
         type: String, 
         required: true,
-        match: [/^\d{10}$/, 'Phone number must be 10 digits']  // Regex to match a 10-digit phone number
+        match: [/^\d{10}$/, 'Phone number must be 10 digits']
     },
     dateOfVisit: { 
         type: Date, 
@@ -116,8 +116,8 @@ const caseSchema = new mongoose.Schema({
     followUpDate: { 
         type: Date, 
         required: true 
-    }, 
-});
+    }
+}, { timestamps: true }); // Automatically add createdAt and updatedAt
 
 const Case = mongoose.model('Case', caseSchema);
 
