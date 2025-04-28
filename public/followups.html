@@ -5,7 +5,86 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Follow Ups - Bhanu Homeopathy</title>
   <style>
-    /* Existing styles */
+    /* General body styling */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f7fc;
+      color: #333;
+    }
+
+    /* Header styling */
+    header {
+      background-color: #4CAF50;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header img {
+      width: 150px;
+    }
+
+    /* Title styling */
+    h1 {
+      text-align: center;
+      font-size: 24px;
+      color: #333;
+      margin: 20px 0;
+    }
+
+    /* Container and table styling */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #4CAF50;
+      color: #fff;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    tr:hover {
+      background-color: #e9f7e1;
+    }
+
+    td a.call-button {
+      color: #4CAF50;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    td a.call-button:hover {
+      text-decoration: underline;
+    }
+
+    /* No data message styling */
+    .no-data {
+      text-align: center;
+      color: #f44336;
+      font-size: 18px;
+      padding: 20px;
+    }
   </style>
 </head>
 <body>
@@ -31,6 +110,10 @@
       <!-- Data will be dynamically inserted here -->
     </tbody>
   </table>
+
+  <div id="noDataMessage" class="no-data" style="display: none;">
+    No follow-ups due for today.
+  </div>
 </div>
 
 <script>
@@ -39,13 +122,16 @@
       const response = await fetch('/followups');
       const data = await response.json();
       const tableBody = document.getElementById('followupsTable').querySelector('tbody');
+      const noDataMessage = document.getElementById('noDataMessage');
       tableBody.innerHTML = '';
 
       if (data.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No follow-ups due for today.</td></tr>';
+        noDataMessage.style.display = 'block';
         return;
       }
 
+      noDataMessage.style.display = 'none';
+      
       data.forEach(caseItem => {
         const row = document.createElement('tr');
         row.innerHTML = `
