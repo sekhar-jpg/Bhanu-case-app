@@ -44,3 +44,12 @@ app.get('/follow-ups', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch follow-ups' });
   }
 });
+// Delete a case by ID
+app.delete('/cases/:id', async (req, res) => {
+  try {
+    await Case.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Case deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete case' });
+  }
+});
