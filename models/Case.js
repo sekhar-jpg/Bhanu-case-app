@@ -1,45 +1,43 @@
 const mongoose = require('mongoose');
 
+// Define the schema for the case model
 const caseSchema = new mongoose.Schema({
-    name: String,
-    age: Number,
-    gender: String,
-    maritalStatus: String,
-    occupation: String,
-    address: String,
-    phone: String,
-    dateOfVisit: Date,
-    complaints: [{ complaint: String, duration: String, description: String }],
-    historyOfPresentIllness: String,
-    pastHistory: {
-        childhoodDiseases: String,
-        surgeriesInjuries: String,
-        majorIllnesses: String,
-    },
-    familyHistory: String,
-    personalHistory: {
-        appetite: String,
-        cravingsAversions: String,
-        thirst: String,
-        bowelMovement: String,
-        urine: String,
-        sleep: String,
-        dreams: String,
-        sweat: String,
-        thermal: String,
-        habits: String,
-        menstrualHistory: String,
-    },
-    mentalSymptoms: String,
-    generalRemarks: String,
-    doctorObservations: String,
-    prescriptions: [{
-        date: Date,
-        remedyName: String,
-        potency: String,
-        dose: String,
-        instructions: String,
-    }]
+  patientName: {
+    type: String,
+    required: true
+  },
+  age: {
+    type: Number,
+    required: true
+  },
+  gender: {
+    type: String,
+    enum: ['Male', 'Female', 'Other'],
+    required: true
+  },
+  symptoms: {
+    type: [String], // Array of symptoms
+    required: true
+  },
+  diagnosis: {
+    type: String
+  },
+  remedy: {
+    type: String
+  },
+  followUpDate: {
+    type: Date
+  },
+  contactNumber: {
+    type: String
+  },
+  caseCreatedAt: {
+    type: Date,
+    default: Date.now
+  }
 });
 
-module.exports = mongoose.model('Case', caseSchema);
+// Create the model using the schema
+const Case = mongoose.model('Case', caseSchema);
+
+module.exports = Case;
