@@ -3,6 +3,9 @@ const Case = require('../models/caseModel'); // Ensure correct path
 // Controller to create a new case
 exports.createCase = async (req, res) => {
   try {
+    // Log the request body for debugging
+    console.log('Request Body:', req.body);
+
     // Validate that required fields are present in the request body
     if (
       !req.body.name ||
@@ -66,7 +69,7 @@ exports.getTodayFollowUps = async (req, res) => {
   }
 };
 
-// ⭐ Controller to delete a case
+// Controller to delete a case
 exports.deleteCase = async (req, res) => {
   try {
     const caseId = req.params.id;
