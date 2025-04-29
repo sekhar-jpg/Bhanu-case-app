@@ -119,7 +119,7 @@
 <script>
   async function fetchFollowups() {
     try {
-      const response = await fetch('/followups');
+      const response = await fetch('/today-followups'); // <-- corrected endpoint here
       const data = await response.json();
       const tableBody = document.getElementById('followupsTable').querySelector('tbody');
       const noDataMessage = document.getElementById('noDataMessage');
