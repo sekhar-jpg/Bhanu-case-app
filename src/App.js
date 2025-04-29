@@ -1,5 +1,5 @@
-// RemedyFinder.js
 import React, { useState } from 'react';
+import axios from 'axios';
 
 function RemedyFinder() {
   const [caseDescription, setCaseDescription] = useState('');
@@ -9,20 +9,15 @@ function RemedyFinder() {
   // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     setLoading(true);
 
     try {
-      // Call the backend API to get remedies based on description
-      const response = await fetch('https://bhanu-case-app.onrender.com/api/get-remedy', {
-
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ description: caseDescription }),
+      // Call the backend API to get remedies based on description using axios
+      const response = await axios.post('https://bhanu-case-app.onrender.com/api/get-remedy', {
+        description: caseDescription,
       });
 
-      const data = await response.json();
-      setRemedies(data.remedies);
+      setRemedies(response.data.remedies);
     } catch (error) {
       console.error("Error fetching remedies:", error);
       setRemedies(["Error fetching remedies. Please try again."]);
