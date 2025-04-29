@@ -1,2 +1,0 @@
-npm init -y  # This will create a package.json file if it doesn't exist
-npm install express cors
