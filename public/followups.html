@@ -25,6 +25,21 @@
       width: 150px;
     }
 
+    /* Back Button Styling */
+    header .back-button {
+      font-size: 16px;
+      color: #fff;
+      text-decoration: none;
+      padding: 8px 16px;
+      background-color: #333;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+
+    header .back-button:hover {
+      background-color: #555;
+    }
+
     /* Title styling */
     h1 {
       text-align: center;
@@ -90,6 +105,7 @@
 <body>
 
 <header>
+  <a href="/" class="back-button">Back to Home</a>
   <img src="/bhanu-homeopathy-logo.png" alt="Bhanu Homeopathy Logo">
 </header>
 
@@ -119,7 +135,7 @@
 <script>
   async function fetchFollowups() {
     try {
-      const response = await fetch('/today-followups'); // <-- corrected endpoint here
+      const response = await fetch('/today-followups');
       const data = await response.json();
       const tableBody = document.getElementById('followupsTable').querySelector('tbody');
       const noDataMessage = document.getElementById('noDataMessage');
