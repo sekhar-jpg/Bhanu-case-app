@@ -1,83 +1,86 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-const caseRoutes = require('./routes/caseRoutes'); // Your routes file
-const Case = require('./models/Case'); // ✅ Add this to access the Case model
+const caseRoutes = require('./routes/caseRoutes');
+const Case = require('./models/Case'); // ✅ Ensure this matches the filename exactly (Case.js)
+
 const app = express();
 
-// Middleware for parsing JSON data from request bodies
-app.use(express.json());
+// ========================
+// Middleware
+// ========================
+app.use(express.json());                      // Parse JSON bodies
+app.use(express.static('public'));           // Serve static files from 'public' folder
 
-// Serve static files (images, CSS, HTML) from the 'public' folder
-app.use(express.static('public'));
-
-// MongoDB connection URI
+// ========================
+// MongoDB Connection
+// ========================
 const dbURI = 'mongodb+srv://bhanuhomeopathy:sekhar123456@cluster0.wm2pxqs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+
 mongoose.connect(dbURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-  .then(() => console.log('MongoDB connected successfully'))
-  .catch((error) => console.log('MongoDB connection error:', error));
+  .then(() => console.log('✅ MongoDB connected successfully'))
+  .catch((error) => console.error('❌ MongoDB connection error:', error));
 
-// Test route to verify server is working correctly
+// ========================
+// Basic Route
+// ========================
 app.get('/', (req, res) => {
-  res.send('Server deployed successfully on Render!');
+  res.send('✅ Server deployed successfully on Render!');
 });
 
-// Routes for case management
+// ========================
+// Routes for Case Management
+// ========================
 app.use('/api/cases', caseRoutes);
 
-// =========================
+// ========================
 // Custom Routes
-// =========================
+// ========================
 
-// Fetch all follow-ups based on search query (name or phone)
+// Search follow-ups by name or phone
 app.get('/follow-ups', async (req, res) => {
-  const searchQuery = req.query.search || '';  // Default to an empty string if no search query is provided
+  const searchQuery = req.query.search || '';
 
   try {
     const followUps = await Case.find({
       $or: [
-        { name: { $regex: searchQuery, $options: 'i' } },  // Case-insensitive search for name
-        { phone: { $regex: searchQuery, $options: 'i' } }   // Case-insensitive search for phone
+        { name: { $regex: searchQuery, $options: 'i' } },
+        { phone: { $regex: searchQuery, $options: 'i' } }
       ]
     });
-    res.json(followUps);  // Send the results as a JSON response
+    res.json(followUps);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch follow-ups', details: err.message });
   }
 });
 
-// Get today's follow-ups
+// Today's follow-ups based on followUpDate field
 app.get('/today-followups', async (req, res) => {
   try {
     const today = new Date();
-    today.setHours(0, 0, 0, 0);  // Set time to 00:00 to get the start of today
+    today.setHours(0, 0, 0, 0);
     const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);  // Set time to start of the next day
+    tomorrow.setDate(tomorrow.getDate() + 1);
 
     const cases = await Case.find({
-      followUpDate: {
-        $gte: today,  // Start from today
-        $lt: tomorrow  // Until tomorrow
-      }
+      followUpDate: { $gte: today, $lt: tomorrow }
     });
 
-    res.json(cases);  // Send the cases for today as a JSON response
+    res.json(cases);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch today\'s follow-ups', details: err.message });
+    res.status(500).json({ error: "Failed to fetch today's follow-ups", details: err.message });
   }
 });
 
-// Get a single case by ID
+// Get single case by ID
 app.get('/cases/:id', async (req, res) => {
   try {
-    const caseData = await Case.findById(req.params.id);  // Find case by ID
-    if (!caseData) {
-      return res.status(404).json({ error: 'Case not found' });
-    }
-    res.json(caseData);  // Send case data as JSON response
+    const caseData = await Case.findById(req.params.id);
+    if (!caseData) return res.status(404).json({ error: 'Case not found' });
+    res.json(caseData);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch case', details: err.message });
   }
@@ -86,11 +89,9 @@ app.get('/cases/:id', async (req, res) => {
 // Update case by ID
 app.put('/cases/:id', async (req, res) => {
   try {
-    const updatedCase = await Case.findByIdAndUpdate(req.params.id, req.body, { new: true });  // Update case
-    if (!updatedCase) {
-      return res.status(404).json({ error: 'Case not found' });
-    }
-    res.json({ message: 'Case updated successfully', case: updatedCase });  // Send success message with updated case data
+    const updatedCase = await Case.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedCase) return res.status(404).json({ error: 'Case not found' });
+    res.json({ message: 'Case updated successfully', case: updatedCase });
   } catch (err) {
     res.status(500).json({ error: 'Failed to update case', details: err.message });
   }
@@ -99,25 +100,23 @@ app.put('/cases/:id', async (req, res) => {
 // Delete case by ID
 app.delete('/cases/:id', async (req, res) => {
   try {
-    const deletedCase = await Case.findByIdAndDelete(req.params.id);  // Delete case by ID
-    if (!deletedCase) {
-      return res.status(404).json({ error: 'Case not found' });
-    }
-    res.json({ message: 'Case deleted successfully' });  // Send success message for deletion
+    const deletedCase = await Case.findByIdAndDelete(req.params.id);
+    if (!deletedCase) return res.status(404).json({ error: 'Case not found' });
+    res.json({ message: 'Case deleted successfully' });
   } catch (err) {
     res.status(500).json({ error: 'Failed to delete case', details: err.message });
   }
 });
 
-// Serve Follow-ups HTML Page (example for serving static HTML file)
+// Serve static followups HTML page
 app.get('/followups-page', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'followups.html'));  // Serve the 'followups.html' page from 'public' directory
+  res.sendFile(path.join(__dirname, 'public', 'followups.html'));
 });
 
-// =========================
-// Start the Server
-// =========================
-const PORT = process.env.PORT || 5000;  // Use environment port or fallback to 5000
+// ========================
+// Start Server
+// ========================
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
