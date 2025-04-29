@@ -17,7 +17,13 @@ const remediesDatabase = {
   // Add more remedies and symptoms here as needed
 };
 
+// Function to get remedies based on symptoms from description
 const getRemediesFromModel = (description) => {
+  // Check if description exists and is a valid string
+  if (!description || typeof description !== 'string') {
+    return ["Error: No valid description provided"];
+  }
+
   const symptoms = description.toLowerCase();
   let remedies = [];
 
@@ -34,6 +40,13 @@ const getRemediesFromModel = (description) => {
 // Remedy API endpoint
 app.post('/api/get-remedy', (req, res) => {
   const { description } = req.body;
+  // Log the request to check for proper data
+  console.log('Received description:', description);
+
+  if (!description || typeof description !== 'string') {
+    return res.status(400).json({ error: "Description is required and should be a valid string" });
+  }
+
   const remedies = getRemediesFromModel(description);
   res.json({ remedies });
 });
