@@ -14,7 +14,8 @@ function RemedyFinder() {
 
     try {
       // Call the backend API to get remedies based on description
-      const response = await fetch('http://localhost:5000/api/get-remedy', {
+      const response = await fetch('https://bhanu-case-app.onrender.com/api/get-remedy', {
+
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ description: caseDescription }),
