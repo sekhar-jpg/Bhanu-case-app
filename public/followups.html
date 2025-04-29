@@ -25,21 +25,6 @@
       width: 150px;
     }
 
-    /* Back Button Styling */
-    header .back-button {
-      font-size: 16px;
-      color: #fff;
-      text-decoration: none;
-      padding: 8px 16px;
-      background-color: #333;
-      border-radius: 5px;
-      margin-top: 10px;
-    }
-
-    header .back-button:hover {
-      background-color: #555;
-    }
-
     /* Title styling */
     h1 {
       text-align: center;
@@ -100,18 +85,36 @@
       font-size: 18px;
       padding: 20px;
     }
+
+    /* Error message box styling */
+    .error-box {
+      background-color: #f8d7da;
+      color: #721c24;
+      padding: 15px;
+      margin: 20px 0;
+      border: 1px solid #f5c6cb;
+      border-radius: 5px;
+      font-size: 16px;
+      max-width: 500px;
+      margin: 20px auto;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
 
 <header>
-  <a href="/" class="back-button">Back to Home</a>
   <img src="/bhanu-homeopathy-logo.png" alt="Bhanu Homeopathy Logo">
 </header>
 
 <h1>Follow Ups - Bhanu Homeopathy</h1>
 
 <div class="container">
+  <!-- Error box for failed API call -->
+  <div id="errorMessage" class="error-box" style="display: none;">
+    <strong>Error:</strong> Failed to fetch follow-ups. Please try again later.
+  </div>
+
   <table id="followupsTable">
     <thead>
       <tr>
@@ -135,19 +138,22 @@
 <script>
   async function fetchFollowups() {
     try {
-      const response = await fetch('/today-followups');
+      const response = await fetch('/followups');
       const data = await response.json();
       const tableBody = document.getElementById('followupsTable').querySelector('tbody');
       const noDataMessage = document.getElementById('noDataMessage');
+      const errorMessage = document.getElementById('errorMessage');
       tableBody.innerHTML = '';
 
       if (data.length === 0) {
         noDataMessage.style.display = 'block';
+        errorMessage.style.display = 'none';
         return;
       }
 
       noDataMessage.style.display = 'none';
-      
+      errorMessage.style.display = 'none';
+
       data.forEach(caseItem => {
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -166,7 +172,9 @@
     } catch (error) {
       console.error('Error fetching followups:', error);
       const tableBody = document.getElementById('followupsTable').querySelector('tbody');
-      tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: red;">Failed to fetch follow-ups. Please try again later.</td></tr>';
+      tableBody.innerHTML = '';
+      const errorMessage = document.getElementById('errorMessage');
+      errorMessage.style.display = 'block';
     }
   }
 
