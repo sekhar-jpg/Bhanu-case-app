@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import RemedyFinderComponent from './App'; // మీ ప్రస్తుత App కాంపోనెంట్ పేరు మార్చబడింది
+import RemedyFinder from './App'; // మీ ప్రస్తుత App కాంపోనెంట్
 import FaceUpload from './components/FaceUpload'; // FaceUpload కాంపోనెంట్ యొక్క సరైన పాత్
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<RemedyFinderComponent />} /> {/* హోమ్‌పేజ్ కోసం రూట్ */}
+        <Route path="/" element={<RemedyFinder />} /> {/* హోమ్‌పేజ్ కోసం రూట్ */}
         <Route path="/analyze-face" element={<FaceUpload />} /> {/* కెమెరా ఫీచర్ కోసం రూట్ */}
       </Routes>
     </Router>
@@ -15,7 +15,7 @@ function App() {
 }
 
 // మీ ప్రస్తుత App కాంపోనెంట్ (RemedyFinder) ఇక్కడ ఉంటుంది
-function RemedyFinderComponent() {
+function RemedyFinder() {
   const [caseDescription, setCaseDescription] = useState('');
   const [remedies, setRemedies] = useState([]);
   const [loading, setLoading] = useState(false);
