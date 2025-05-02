@@ -22,7 +22,7 @@ const FaceUpload = () => {
 
     try {
       const response = await axios.post(
-        "https://<your-render-app-url>.onrender.com/analyze-face", // Replace with your live Render URL
+        "https://bhanu-homeopathy.onrender.com/analyze-face", // Replace with your live Render URL
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
