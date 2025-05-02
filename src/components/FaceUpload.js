@@ -4,7 +4,7 @@ import axios from "axios";
 const FaceUpload = () => {
   const [image, setImage] = useState(null);
   const [result, setResult] = useState(null);
-  
+
   // Handle image selection
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
@@ -22,12 +22,11 @@ const FaceUpload = () => {
 
     try {
       const response = await axios.post(
-        "https://bhanu-homeopathy.onrender.com/analyze-face", // Replace with your live Render URL
+        "https://bhanu-case-app.onrender.com/analyze-face", // ✅ Correct backend URL
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
 
-      // Handle the response (you can use the AI result later)
       setResult(response.data);
       console.log("AI Result:", response.data.aiResult);
     } catch (error) {
