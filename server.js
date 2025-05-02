@@ -90,6 +90,15 @@ app.post('/api/get-remedy', (req, res) => {
 // Use case routes
 app.use('/submit-case', caseRoutes);
 
+// ------------------ Serve Static Files and Frontend ------------------ //
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Catch-all route to serve index.html for any other requests
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+// -------------------------------------------------------------------- //
+
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
