@@ -28,6 +28,9 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+// ✅ Make uploads folder publicly accessible
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // Analyze face endpoint (placeholder AI response)
 app.post("/analyze-face", upload.single("image"), (req, res) => {
   if (!req.file) {
