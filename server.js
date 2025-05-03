@@ -94,11 +94,11 @@ app.post('/api/get-remedy', (req, res) => {
 app.use('/submit-case', caseRoutes);
 
 // ------------------ Serve Static Files and Frontend ------------------ //
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'build'))); // Change 'public' to 'build'
 
 // Catch-all route to serve index.html for any other requests
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'build', 'index.html')); // Change 'public' to 'build'
 });
 // -------------------------------------------------------------------- //
 
