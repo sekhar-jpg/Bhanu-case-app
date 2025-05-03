@@ -2,15 +2,15 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const caseRoutes = require('./routes/caseRoutes');
-const Case = require('./models/Case'); // Ensure filename matches exactly (Case.js)
+const Case = require('./models/Case'); // ✅ Ensure this matches the filename exactly (Case.js)
 
 const app = express();
 
 // ========================
 // Middleware
 // ========================
-app.use(express.json());                     // Parse JSON bodies
-app.use(express.static('public'));           // Serve static files from 'public' folder
+app.use(express.json());                      // Parse JSON bodies
+app.use(express.static(path.join(__dirname, 'build'))); // Serve React build files
 
 // ========================
 // MongoDB Connection
@@ -43,6 +43,7 @@ app.use('/api/cases', caseRoutes);
 // Search follow-ups by name or phone
 app.get('/follow-ups', async (req, res) => {
   const searchQuery = req.query.search || '';
+
   try {
     const followUps = await Case.find({
       $or: [
@@ -107,9 +108,16 @@ app.delete('/cases/:id', async (req, res) => {
   }
 });
 
-// Serve static follow-ups HTML page
+// Serve static followups HTML page
 app.get('/followups-page', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'followups.html'));
+});
+
+// ========================
+// React fallback route
+// ========================
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 // ========================
