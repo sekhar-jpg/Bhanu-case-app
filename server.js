@@ -1,109 +1,121 @@
 const express = require('express');
-const cors = require('cors');
-const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
+const mongoose = require('mongoose');
+const path = require('path');
+const caseRoutes = require('./routes/caseRoutes');
+const Case = require('./models/Case'); // Ensure filename matches exactly (Case.js)
 
 const app = express();
 
-// Import custom routes
-const caseRoutes = require('./routes/caseRoutes');
-
+// ========================
 // Middleware
-app.use(cors());
-app.use(express.json());
+// ========================
+app.use(express.json());                     // Parse JSON bodies
+app.use(express.static('public'));           // Serve static files from 'public' folder
 
-// ------------------ Image Upload Setup ------------------ //
-// Create uploads folder if it doesn't exist
-const uploadDir = "uploads";
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir);
-}
+// ========================
+// MongoDB Connection
+// ========================
+const dbURI = 'mongodb+srv://bhanuhomeopathy:sekhar123456@cluster0.wm2pxqs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 
-// Multer storage config
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, uploadDir),
-  filename: (req, file, cb) => cb(null, `face_${Date.now()}${path.extname(file.originalname)}`)
+mongoose.connect(dbURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => console.log('✅ MongoDB connected successfully'))
+  .catch((error) => console.error('❌ MongoDB connection error:', error));
+
+// ========================
+// Basic Route
+// ========================
+app.get('/', (req, res) => {
+  res.send('✅ Server deployed successfully on Render!');
 });
 
-const upload = multer({ storage });
+// ========================
+// Routes for Case Management
+// ========================
+app.use('/api/cases', caseRoutes);
 
-// ✅ Make uploads folder publicly accessible
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// ========================
+// Custom Routes
+// ========================
 
-// Analyze face endpoint (placeholder AI response)
-app.post("/analyze-face", upload.single("image"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: "No image uploaded" });
+// Search follow-ups by name or phone
+app.get('/follow-ups', async (req, res) => {
+  const searchQuery = req.query.search || '';
+  try {
+    const followUps = await Case.find({
+      $or: [
+        { name: { $regex: searchQuery, $options: 'i' } },
+        { phone: { $regex: searchQuery, $options: 'i' } }
+      ]
+    });
+    res.json(followUps);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch follow-ups', details: err.message });
   }
-
-  console.log("Face image saved:", req.file.filename);
-
-  // Dummy response (later integrate AI)
-  res.json({
-    message: "Image received",
-    file: req.file.filename,
-    aiResult: {
-      facialType: "Carbonic",
-      constitution: "Phosphoric",
-      remedies: ["Calcarea carb", "Phosphorus", "Lycopodium"]
-    }
-  });
-});
-// -------------------------------------------------------- //
-
-// Remedy logic
-const remediesDatabase = {
-  headache: ["Belladonna", "Nux Vomica", "Gelsemium"],
-  nausea: ["Nux Vomica", "Ipecac", "Arsenicum album"],
-  // Add more remedies and symptoms here as needed
-};
-
-const getRemediesFromModel = (description) => {
-  if (!description || typeof description !== 'string') {
-    return ["Error: No valid description provided"];
-  }
-
-  const symptoms = description.toLowerCase();
-  let remedies = [];
-
-  if (symptoms.includes("headache")) {
-    remedies = remedies.concat(remediesDatabase.headache);
-  }
-  if (symptoms.includes("nausea")) {
-    remedies = remedies.concat(remediesDatabase.nausea);
-  }
-
-  return remedies.length ? remedies : ["No matching remedies found"];
-};
-
-// Remedy API endpoint
-app.post('/api/get-remedy', (req, res) => {
-  const { description } = req.body;
-  console.log('Received description:', description);
-
-  if (!description || typeof description !== 'string') {
-    return res.status(400).json({ error: "Description is required and should be a valid string" });
-  }
-
-  const remedies = getRemediesFromModel(description);
-  res.json({ remedies });
 });
 
-// Use case routes
-app.use('/submit-case', caseRoutes);
+// Today's follow-ups based on followUpDate field
+app.get('/today-followups', async (req, res) => {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
 
-// ------------------ Serve Static Files and Frontend ------------------ //
-app.use(express.static(path.join(__dirname, 'build'))); // Change 'public' to 'build'
+    const cases = await Case.find({
+      followUpDate: { $gte: today, $lt: tomorrow }
+    });
 
-// Catch-all route to serve index.html for any other requests
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html')); // Change 'public' to 'build'
+    res.json(cases);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch today's follow-ups", details: err.message });
+  }
 });
-// -------------------------------------------------------------------- //
 
-// Start the server
+// Get single case by ID
+app.get('/cases/:id', async (req, res) => {
+  try {
+    const caseData = await Case.findById(req.params.id);
+    if (!caseData) return res.status(404).json({ error: 'Case not found' });
+    res.json(caseData);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch case', details: err.message });
+  }
+});
+
+// Update case by ID
+app.put('/cases/:id', async (req, res) => {
+  try {
+    const updatedCase = await Case.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedCase) return res.status(404).json({ error: 'Case not found' });
+    res.json({ message: 'Case updated successfully', case: updatedCase });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update case', details: err.message });
+  }
+});
+
+// Delete case by ID
+app.delete('/cases/:id', async (req, res) => {
+  try {
+    const deletedCase = await Case.findByIdAndDelete(req.params.id);
+    if (!deletedCase) return res.status(404).json({ error: 'Case not found' });
+    res.json({ message: 'Case deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete case', details: err.message });
+  }
+});
+
+// Serve static follow-ups HTML page
+app.get('/followups-page', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'followups.html'));
+});
+
+// ========================
+// Start Server
+// ========================
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
