@@ -10,7 +10,7 @@ const app = express();
 // Middleware
 // ========================
 app.use(express.json());                      // Parse JSON bodies
-app.use(express.static('public'));           // Serve static files from 'public' folder
+app.use(express.static(path.join(__dirname, 'build'))); // Serve React build files
 
 // ========================
 // MongoDB Connection
