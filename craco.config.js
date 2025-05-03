@@ -1,12 +1,10 @@
 // craco.config.js
 module.exports = {
   webpack: {
-    configure: (webpackConfig) => {
-      webpackConfig.resolve.fallback = {
-        ...webpackConfig.resolve.fallback,
-        path: false,
-      };
-      return webpackConfig;
-    },
-  },
+    resolve: {
+      fallback: {
+        path: require.resolve("path-browserify")
+      }
+    }
+  }
 };
